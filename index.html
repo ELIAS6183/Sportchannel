@@ -1,18 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Sportcheck Live</title>
+<title>Sportcheck Live Pro</title>
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<h1>⚽ Sportcheck Live</h1>
-<p id="date"></p>
+<h1>⚽ Sportcheck LIVE</h1>
+
+<div class="top">
+  <select id="league" onchange="loadMatches()">
+    <option value="all">Toutes les ligues</option>
+    <option value="Ligue 1">Ligue 1</option>
+    <option value="La Liga">La Liga</option>
+    <option value="Premier League">Premier League</option>
+    <option value="Bundesliga">Bundesliga</option>
+    <option value="Champions League">Champions League</option>
+    <option value="Saudi Pro League">Saudi League</option>
+  </select>
+</div>
 
 <div id="matches"></div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
