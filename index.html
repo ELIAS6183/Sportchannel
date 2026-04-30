@@ -2,28 +2,204 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Sportcheck Live Pro</title>
-<link rel="stylesheet" href="style.css">
+<title>Sport Live Pro Max</title>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial;
+  background:#0a0f1c;
+  color:white;
+}
+
+/* TOP BAR MOBILE */
+.topbar{
+  background:#111827;
+  padding:15px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  color:#38bdf8;
+}
+
+/* LANG */
+.langs{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:5px;
+  padding:10px;
+}
+
+.langs button{
+  background:#1f2937;
+  border:none;
+  padding:6px 10px;
+  border-radius:15px;
+  color:white;
+}
+
+/* NAV */
+.nav{
+  display:flex;
+  justify-content:space-around;
+  padding:10px;
+  background:#0f172a;
+  position:sticky;
+  top:0;
+}
+
+.nav button{
+  background:none;
+  border:none;
+  color:white;
+  font-weight:bold;
+}
+
+/* INPUT */
+input{
+  width:90%;
+  margin:10px auto;
+  display:block;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+}
+
+/* CARD */
+.card{
+  background:#111827;
+  margin:10px;
+  padding:12px;
+  border-radius:15px;
+  border-left:4px solid #38bdf8;
+}
+
+.score{
+  color:#22c55e;
+  font-weight:bold;
+}
+
+.star{
+  float:right;
+  cursor:pointer;
+  color:#facc15;
+}
+
+/* FAVORIS */
+.fav{
+  border-left:4px solid #facc15;
+}
+</style>
 </head>
 
 <body>
 
-<h1>⚽ Sportcheck LIVE</h1>
+<div class="topbar">⚽ SPORT LIVE PRO MAX</div>
 
-<div class="top">
-  <select id="league" onchange="loadMatches()">
-    <option value="all">Toutes les ligues</option>
-    <option value="Ligue 1">Ligue 1</option>
-    <option value="La Liga">La Liga</option>
-    <option value="Premier League">Premier League</option>
-    <option value="Bundesliga">Bundesliga</option>
-    <option value="Champions League">Champions League</option>
-    <option value="Saudi Pro League">Saudi League</option>
-  </select>
+<!-- LANG -->
+<div class="langs">
+<button onclick="setLang('fr')">🇫🇷</button>
+<button onclick="setLang('en')">🇺🇸</button>
+<button onclick="setLang('es')">🇪🇸</button>
+<button onclick="setLang('pt')">🇵🇹</button>
+<button onclick="setLang('de')">🇩🇪</button>
+<button onclick="setLang('ar')">🇸🇦</button>
 </div>
+
+<!-- NAV -->
+<div class="nav">
+<button onclick="setLeague('all')">ALL</button>
+<button onclick="setLeague('Ligue 1')">L1</button>
+<button onclick="setLeague('Premier League')">PL</button>
+<button onclick="setLeague('La Liga')">LL</button>
+<button onclick="showFav()">⭐</button>
+</div>
+
+<input id="search" placeholder="Rechercher équipe..." oninput="render()">
 
 <div id="matches"></div>
 
-<script src="script.js"></script>
+<script>
+const API_KEY="TA_CLE_ICI";
+
+let data=[];
+let league="all";
+let favs=JSON.parse(localStorage.getItem("favs")||"[]");
+
+async function load(){
+  const url="https://v3.football.api-sports.io/fixtures?date="+
+  new Date().toISOString().split("T")[0];
+
+  const res=await fetch(url,{
+    headers:{ "x-apisports-key":API_KEY }
+  });
+
+  const json=await res.json();
+  data=json.response;
+  render();
+}
+
+function setLeague(l){league=l;render();}
+
+function setLang(l){
+  alert("Langue : "+l);
+}
+
+function toggleFav(id){
+  if(favs.includes(id)){
+    favs=favs.filter(f=>f!==id);
+  }else{
+    favs.push(id);
+  }
+  localStorage.setItem("favs",JSON.stringify(favs));
+  render();
+}
+
+function showFav(){
+  render(true);
+}
+
+function render(favOnly=false){
+  const box=document.getElementById("matches");
+  const s=document.getElementById("search").value.toLowerCase();
+
+  box.innerHTML="";
+
+  data.forEach(m=>{
+
+    let id=m.fixture.id;
+    let lg=m.league.name;
+    let home=m.teams.home.name;
+    let away=m.teams.away.name;
+
+    if(league!="all" && !lg.includes(league))return;
+    if(s && !home.toLowerCase().includes(s) && !away.toLowerCase().includes(s))return;
+    if(favOnly && !favs.includes(id))return;
+
+    let status=m.fixture.status.short;
+    let score=m.goals.home+" - "+m.goals.away;
+
+    box.innerHTML+=`
+      <div class="card ${favs.includes(id)?"fav":""}">
+        🏆 ${lg}
+        <span class="star" onclick="toggleFav(${id})">⭐</span><br>
+
+        ⚽ ${home} vs ${away}<br>
+
+        ⏰ ${m.fixture.date.slice(11,16)}<br>
+
+        <div class="score">
+          ${status=="FT"?"FIN":"🔴 LIVE "+score}
+        </div>
+      </div>
+    `;
+  });
+}
+
+load();
+setInterval(load,60000);
+</script>
+
 </body>
 </html>
