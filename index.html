@@ -450,6 +450,14 @@
       background: linear-gradient(135deg, var(--green), var(--cyan));
     }
 
+    .date-box button small {
+      display: block;
+      margin-top: 2px;
+      font-size: .68rem;
+      opacity: .82;
+      font-weight: 900;
+    }
+
     .section { display: none; }
     .section.active { display: grid; gap: 16px; }
 
@@ -686,11 +694,7 @@
 
       <section class="panel toolbar">
         <div class="filters" id="filterBar"></div>
-        <div class="date-box" id="dateBox">
-          <button data-date="yesterday" data-i18n="yesterday">Hier</button>
-          <button class="active" data-date="today" data-i18n="today">Aujourd’hui</button>
-          <button data-date="tomorrow" data-i18n="tomorrow">Demain</button>
-        </div>
+        <div class="date-box" id="dateBox"></div>
       </section>
 
       <section class="section active" id="section-matches"><div id="matchesContainer"></div></section>
@@ -741,14 +745,11 @@
     ];
 
     const matches = [
-      { id: 1, date: "today", country: "France", flag: "🇫🇷", league: "Ligue 1", round: "J32", status: "live", minute: 67, time: "20:45", channel: "Canal+ Foot", watch: "myCANAL", access: "subscription", home: "Paris SG", away: "Lyon", hIcon: "PSG", aIcon: "OL", hScore: 2, aScore: 1, stadium: "Parc des Princes", referee: "Clément Turpin", possession: 58, shotsH: 13, shotsA: 8, xgH: 1.8, xgA: .9, attacksH: 42, attacksA: 31, momentum: [3,5,6,4,8,9], events: ["12’ But Paris SG", "38’ Carton jaune Lyon", "51’ But Lyon", "63’ But Paris SG"] },
-      { id: 2, date: "today", country: "England", flag: "🏴", league: "Premier League", round: "M35", status: "upcoming", minute: 0, time: "21:00", channel: "Sky Sports", watch: "Sky Go / NOW", access: "subscription", home: "Manchester City", away: "Arsenal", hIcon: "MCI", aIcon: "ARS", hScore: null, aScore: null, stadium: "Etihad Stadium", referee: "Michael Oliver", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [4,4,4,4,4,4], events: ["Avant-match : compositions 1h avant le coup d’envoi"] },
-      { id: 3, date: "today", country: "Spain", flag: "🇪🇸", league: "LaLiga", round: "J34", status: "finished", minute: 90, time: "18:30", channel: "beIN SPORTS", watch: "beIN Connect", access: "subscription", home: "Real Madrid", away: "Valencia", hIcon: "RMA", aIcon: "VAL", hScore: 3, aScore: 0, stadium: "Santiago Bernabéu", referee: "Mateu Lahoz", possession: 63, shotsH: 18, shotsA: 5, xgH: 2.4, xgA: .4, attacksH: 61, attacksA: 22, momentum: [7,8,6,9,8,7], events: ["24’ But Real Madrid", "44’ But Real Madrid", "72’ But Real Madrid"] },
-      { id: 4, date: "today", country: "Germany", flag: "🇩🇪", league: "Bundesliga", round: "S31", status: "live", minute: 45, time: "19:30", channel: "DAZN", watch: "DAZN App", access: "subscription", home: "Bayern Munich", away: "Dortmund", hIcon: "FCB", aIcon: "BVB", hScore: 1, aScore: 1, stadium: "Allianz Arena", referee: "Daniel Siebert", possession: 54, shotsH: 9, shotsA: 7, xgH: 1.1, xgA: 1.0, attacksH: 35, attacksA: 33, momentum: [4,7,5,8,5,6], events: ["9’ But Dortmund", "27’ But Bayern", "45+2’ Mi-temps"] },
-      { id: 5, date: "today", country: "Italy", flag: "🇮🇹", league: "Serie A", round: "G33", status: "upcoming", minute: 0, time: "20:45", channel: "DAZN", watch: "DAZN App", access: "subscription", home: "Inter", away: "Juventus", hIcon: "INT", aIcon: "JUV", hScore: null, aScore: null, stadium: "San Siro", referee: "Daniele Orsato", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [5,5,5,5,5,5], events: ["Avant-match : duel pour le haut du classement"] },
-      { id: 6, date: "today", country: "Europe", flag: "🇪🇺", league: "Champions League", round: "Semi-final", status: "upcoming", minute: 0, time: "21:00", channel: "Canal+ / RMC Sport", watch: "myCANAL / RMC Sport", access: "subscription", home: "Barcelona", away: "Liverpool", hIcon: "BAR", aIcon: "LIV", hScore: null, aScore: null, stadium: "Estadi Olímpic", referee: "Szymon Marciniak", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [5,5,5,5,5,5], events: ["Avant-match : diffusion selon pays"] },
-      { id: 7, date: "tomorrow", country: "World", flag: "🌍", league: "International Friendly", round: "Friendly", status: "upcoming", minute: 0, time: "19:00", channel: "YouTube", watch: "Chaîne officielle", access: "free", home: "Maroc", away: "Sénégal", hIcon: "MAR", aIcon: "SEN", hScore: null, aScore: null, stadium: "Stade Mohammed V", referee: "À confirmer", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [5,5,5,5,5,5], events: ["Avant-match : lien officiel à confirmer"] },
-      { id: 8, date: "yesterday", country: "France", flag: "🇫🇷", league: "Ligue 2", round: "J35", status: "finished", minute: 90, time: "17:00", channel: "beIN SPORTS", watch: "beIN Connect", access: "subscription", home: "Saint-Étienne", away: "Bordeaux", hIcon: "ASSE", aIcon: "FCGB", hScore: 1, aScore: 1, stadium: "Geoffroy-Guichard", referee: "Bastien Dechepy", possession: 49, shotsH: 11, shotsA: 10, xgH: 1.2, xgA: 1.1, attacksH: 38, attacksA: 36, momentum: [4,6,5,6,4,5], events: ["31’ But Bordeaux", "76’ But Saint-Étienne"] }
+      { id: 1, date: "2026-04-30", country: "Europe", flag: "🇪🇺", league: "UEFA Europa League", round: "Semi-final · 1st leg", status: "upcoming", minute: 0, time: "21:00", channel: "Diffuseur selon pays", watch: "Guide TV officiel / UEFA", access: "subscription", home: "Nottingham Forest", away: "Aston Villa", hIcon: "NFO", aIcon: "AVL", hScore: null, aScore: null, stadium: "City Ground", referee: "À confirmer", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [5,5,5,5,5,5], events: ["21:00 Coup d’envoi prévu"] },
+      { id: 2, date: "2026-04-30", country: "Europe", flag: "🇪🇺", league: "UEFA Europa League", round: "Semi-final · 1st leg", status: "upcoming", minute: 0, time: "21:00", channel: "Diffuseur selon pays", watch: "Guide TV officiel / UEFA", access: "subscription", home: "SC Braga", away: "SC Freiburg", hIcon: "BRA", aIcon: "SCF", hScore: null, aScore: null, stadium: "Estádio Municipal de Braga", referee: "À confirmer", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [5,5,5,5,5,5], events: ["21:00 Coup d’envoi prévu"] },
+      { id: 3, date: "2026-04-30", country: "Europe", flag: "🇪🇺", league: "UEFA Conference League", round: "Semi-final · 1st leg", status: "upcoming", minute: 0, time: "21:00", channel: "Diffuseur selon pays", watch: "Guide TV officiel / UEFA", access: "subscription", home: "Rayo Vallecano", away: "Strasbourg", hIcon: "RAY", aIcon: "RCSA", hScore: null, aScore: null, stadium: "Estadio de Vallecas", referee: "À confirmer", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [5,5,5,5,5,5], events: ["21:00 Coup d’envoi prévu"] },
+      { id: 4, date: "2026-04-30", country: "Europe", flag: "🇪🇺", league: "UEFA Conference League", round: "Semi-final · 1st leg", status: "upcoming", minute: 0, time: "21:00", channel: "Diffuseur selon pays", watch: "Guide TV officiel / UEFA", access: "subscription", home: "Shakhtar Donetsk", away: "Crystal Palace", hIcon: "SHA", aIcon: "CRY", hScore: null, aScore: null, stadium: "Henryk Reyman Stadium", referee: "À confirmer", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [5,5,5,5,5,5], events: ["21:00 Coup d’envoi prévu"] },
+      { id: 5, date: "2026-05-01", country: "England", flag: "🏴", league: "Premier League", round: "Matchday", status: "upcoming", minute: 0, time: "21:00", channel: "Diffuseur selon pays", watch: "Guide TV officiel", access: "subscription", home: "Leeds United", away: "Burnley", hIcon: "LEE", aIcon: "BUR", hScore: null, aScore: null, stadium: "Elland Road", referee: "À confirmer", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [5,5,5,5,5,5], events: ["21:00 Coup d’envoi prévu"] }
     ];
 
     const rankings = {
@@ -763,7 +764,7 @@
       theme: localStorage.getItem("fn_theme") || "dark",
       page: "matches",
       filter: "all",
-      date: "today",
+      date: todayISO(),
       league: "all",
       search: "",
       selected: Number(localStorage.getItem("fn_selected") || 1),
@@ -775,6 +776,72 @@
     const $$ = selector => Array.from(document.querySelectorAll(selector));
     const tr = key => I18N[state.lang][key] || I18N.fr[key] || key;
 
+    function pad(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function todayISO() {
+      const now = new Date();
+      return now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate());
+    }
+
+    function offsetISO(days) {
+      const date = new Date();
+      date.setDate(date.getDate() + days);
+      return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
+    }
+
+    function displayDate(iso) {
+      const parts = iso.split("-").map(Number);
+      const date = new Date(parts[0], parts[1] - 1, parts[2]);
+      return date.toLocaleDateString(state.lang, { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" });
+    }
+
+    function renderDateButtons() {
+      const dates = [
+        { label: tr("today"), iso: offsetISO(0) },
+        { label: tr("tomorrow"), iso: offsetISO(1) },
+        { label: "+2", iso: offsetISO(2) }
+      ];
+      if (!dates.some(item => item.iso === state.date)) state.date = todayISO();
+      $("#dateBox").innerHTML = dates.map(item => `<button data-date="${item.iso}" class="${state.date === item.iso ? "active" : ""}"><span>${item.label}</span><small>${displayDate(item.iso)}</small></button>`).join("");
+    }
+
+    function scheduleMidnightUpdate() {
+      const now = new Date();
+      const next = new Date(now);
+      next.setHours(24, 0, 2, 0);
+      setTimeout(() => {
+        state.date = todayISO();
+        renderAll();
+        scheduleMidnightUpdate();
+      }, Math.max(1000, next.getTime() - now.getTime()));
+    }
+
+    function syncMatchStatus() {
+      const now = new Date();
+      matches.forEach(match => {
+        const kickoff = new Date(match.date + "T" + match.time + ":00");
+        const end = new Date(kickoff.getTime() + 115 * 60000);
+        if (now < kickoff) {
+          match.status = "upcoming";
+          match.minute = 0;
+          match.hScore = null;
+          match.aScore = null;
+        } else if (now <= end) {
+          match.status = "live";
+          match.minute = Math.min(90, Math.max(1, Math.floor((now.getTime() - kickoff.getTime()) / 60000)));
+          if (match.hScore === null) match.hScore = 0;
+          if (match.aScore === null) match.aScore = 0;
+        } else {
+          match.status = "finished";
+          match.minute = 90;
+          if (match.hScore === null) match.hScore = 0;
+          if (match.aScore === null) match.aScore = 0;
+        }
+      });
+    }
+
     function init() {
       document.documentElement.dataset.theme = state.theme;
       $("#languageSelect").value = state.lang;
@@ -782,6 +849,7 @@
       bindEvents();
       updateClock();
       setInterval(updateClock, 1000);
+      scheduleMidnightUpdate();
       setInterval(simulateLive, 8500);
     }
 
@@ -809,12 +877,15 @@
         const button = event.target.closest("button");
         if (!button) return;
         state.date = button.dataset.date;
+        localStorage.setItem("fn_date", state.date);
         renderAll();
       });
     }
 
     function renderAll() {
+      syncMatchStatus();
       renderText();
+      renderDateButtons();
       renderNav();
       renderFilters();
       renderLeagues();
@@ -858,7 +929,7 @@
 
     function setFilter(filter) {
       state.filter = filter;
-      if (filter === "live") state.date = "today";
+      if (filter === "live") state.date = todayISO();
       setPage("matches");
       renderAll();
     }
@@ -886,7 +957,7 @@
 
     function renderStats() {
       $("#statLive").textContent = matches.filter(match => match.status === "live").length;
-      $("#statToday").textContent = matches.filter(match => match.date === "today").length;
+      $("#statToday").textContent = matches.filter(match => match.date === todayISO()).length;
       $("#statTv").textContent = matches.filter(match => match.channel).length;
       $("#statFav").textContent = state.favorites.length;
     }
@@ -913,7 +984,7 @@
         const fav = state.favorites.includes(match.id);
         const text = (match.country + " " + match.league + " " + match.home + " " + match.away + " " + match.channel + " " + match.watch).toLowerCase();
         const filterOk = state.filter === "all" || state.filter === match.status || (state.filter === "tv" && match.channel) || (state.filter === "favorites" && fav);
-        const dateOk = state.filter === "live" || match.date === state.date;
+        const dateOk = match.date === state.date;
         const leagueOk = state.league === "all" || match.league === state.league;
         const searchOk = query === "" || text.includes(query);
         return filterOk && dateOk && leagueOk && searchOk;
@@ -989,7 +1060,7 @@
     }
 
     function renderTv() {
-      const items = matches.filter(match => match.channel).sort((a, b) => a.time.localeCompare(b.time));
+      const items = matches.filter(match => match.channel && match.date >= todayISO()).sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
       $("#tvList").innerHTML = items.map(match => `<div class="tv-card" onclick="selectMatch(${match.id}); setPage('matches')"><div class="channel-logo">${match.channel.split(" ")[0]}</div><div><b>${match.home} - ${match.away}</b><span>${match.time} · ${match.channel} · ${match.watch}</span></div><span class="badge">${tr(match.access)}</span></div>`).join("");
     }
 
@@ -999,7 +1070,7 @@
 
     function renderTeams() {
       const teams = [];
-      matches.forEach(match => {
+      matches.filter(match => match.date >= todayISO()).forEach(match => {
         teams.push({ name: match.home, icon: match.hIcon, league: match.league, id: match.id });
         teams.push({ name: match.away, icon: match.aIcon, league: match.league, id: match.id });
       });
