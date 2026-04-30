@@ -1,215 +1,1755 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Sport Live Pro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KoraPulse Elite</title>
 
-<style>
-body{
-  margin:0;
-  font-family: Arial;
-  background:#050816;
-  color:white;
-}
+  <style>
+    :root {
+      --bg: #050712;
+      --bg2: #090d1f;
+      --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.12);
+      --text: #f8fbff;
+      --muted: #9aa7bd;
+      --line: rgba(255,255,255,.14);
+      --gold: #ffd36a;
+      --green: #23e6a8;
+      --red: #ff4d6d;
+      --blue: #5ee7ff;
+      --purple: #a855f7;
+      --shadow: 0 25px 80px rgba(0,0,0,.45);
+      --radius: 28px;
+    }
 
-/* ANIMATION INTRO */
-.intro{
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  animation: fadeIn 1.5s ease-in-out;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-@keyframes fadeIn{
-  from{opacity:0; transform:scale(1.1);}
-  to{opacity:1; transform:scale(1);}
-}
+    body {
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(94,231,255,.22), transparent 35%),
+        radial-gradient(circle at 80% 20%, rgba(168,85,247,.20), transparent 35%),
+        radial-gradient(circle at 50% 100%, rgba(35,230,168,.16), transparent 35%),
+        linear-gradient(135deg, var(--bg), var(--bg2));
+      color: var(--text);
+      overflow-x: hidden;
+    }
 
-.title{
-  font-size:32px;
-  font-weight:bold;
-  background:linear-gradient(90deg,#00c6ff,#0072ff,#ff00cc);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  animation: glow 2s infinite alternate;
-}
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.8), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-@keyframes glow{
-  from{filter:drop-shadow(0 0 5px #00c6ff);}
-  to{filter:drop-shadow(0 0 20px #ff00cc);}
-}
+    button, input, select {
+      font: inherit;
+    }
 
-.subtitle{
-  margin-top:10px;
-  color:#aaa;
-}
+    button {
+      cursor: pointer;
+      border: 0;
+    }
 
-/* LIGUES */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  margin-top:20px;
-  width:80%;
-}
+    .app {
+      position: relative;
+      z-index: 1;
+      width: min(1440px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 60px;
+    }
 
-.btn{
-  padding:15px;
-  border:none;
-  border-radius:15px;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
-}
+    .glass {
+      border: 1px solid var(--line);
+      background: linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.045));
+      backdrop-filter: blur(26px);
+      box-shadow: var(--shadow);
+    }
 
-.btn:hover{
-  transform:scale(1.05);
-}
+    .splash {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(94,231,255,.24), transparent 35%),
+        linear-gradient(135deg, #030610, #0b1026);
+      animation: splashOut .8s ease forwards;
+      animation-delay: 2.25s;
+      pointer-events: none;
+    }
 
-.l1{background:#2563eb;}
-.pl{background:#10b981;}
-.ll{background:#f97316;}
-.bu{background:#ef4444;}
-.champ{background:#a855f7;}
-.saudi{background:#facc15; color:black;}
-.portugal{background:#06b6d4;}
-.holland{background:#22c55e;}
+    .splash-ball {
+      width: 124px;
+      height: 124px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 25%, white, #5ee7ff 20%, #2364ff 45%, #081633 78%);
+      box-shadow: 0 0 80px rgba(94,231,255,.6);
+      animation: ballIntro 1.2s cubic-bezier(.2,1,.2,1) infinite alternate;
+      position: relative;
+    }
 
-/* APP */
-.app{
-  display:none;
-  padding:10px;
-}
+    .splash-ball::after {
+      content: "";
+      position: absolute;
+      inset: -28px;
+      border-radius: inherit;
+      border: 2px solid rgba(255,255,255,.18);
+      animation: pulse 1.4s ease infinite;
+    }
 
-.topbar{
-  text-align:center;
-  font-size:20px;
-  padding:10px;
-  color:#38bdf8;
-}
+    .splash-title {
+      margin-top: 28px;
+      text-align: center;
+      font-size: clamp(38px, 7vw, 84px);
+      letter-spacing: -0.07em;
+      font-weight: 950;
+      background: linear-gradient(90deg, #fff, var(--blue), var(--gold));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
 
-/* LANG */
-.langs{
-  display:flex;
-  justify-content:center;
-  gap:5px;
-  margin:10px;
-}
+    .splash-sub {
+      margin-top: 10px;
+      color: var(--muted);
+      text-align: center;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
 
-.langs button{
-  background:#111827;
-  border:none;
-  padding:5px 8px;
-  color:white;
-  border-radius:10px;
-}
+    @keyframes ballIntro {
+      from { transform: translateY(18px) scale(.92) rotate(-12deg); }
+      to { transform: translateY(-18px) scale(1.05) rotate(12deg); }
+    }
 
-/* MATCH */
-.card{
-  background:#111827;
-  margin:10px;
-  padding:12px;
-  border-radius:15px;
-  border-left:4px solid #38bdf8;
-}
+    @keyframes pulse {
+      from { transform: scale(.78); opacity: .9; }
+      to { transform: scale(1.22); opacity: 0; }
+    }
 
-.star{
-  float:right;
-  color:#facc15;
-  cursor:pointer;
-}
-</style>
+    @keyframes splashOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    .setup {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgba(3,6,16,.76);
+      backdrop-filter: blur(22px);
+    }
+
+    .setup.hidden {
+      display: none;
+    }
+
+    .setup-card {
+      width: min(980px, 100%);
+      border-radius: 36px;
+      padding: clamp(22px, 4vw, 44px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .setup-card::before {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(94,231,255,.26), transparent 68%);
+      right: -160px;
+      top: -160px;
+      pointer-events: none;
+    }
+
+    .setup-head {
+      position: relative;
+      display: grid;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .eyebrow {
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    h1 {
+      font-size: clamp(38px, 6vw, 76px);
+      line-height: .92;
+      letter-spacing: -0.07em;
+      font-weight: 950;
+    }
+
+    .lead {
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .setup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      position: relative;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 18px;
+      background: rgba(255,255,255,.06);
+    }
+
+    .panel h3 {
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    .lang-grid, .league-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      padding: 11px 14px;
+      border-radius: 999px;
+      color: var(--text);
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--line);
+      transition: .2s ease;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .chip:hover,
+    .chip.active {
+      background: linear-gradient(135deg, rgba(94,231,255,.24), rgba(168,85,247,.22));
+      border-color: rgba(94,231,255,.5);
+      transform: translateY(-1px);
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .input, .select {
+      width: 100%;
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: rgba(0,0,0,.24);
+      border-radius: 16px;
+      padding: 14px 15px;
+      outline: none;
+    }
+
+    .input:focus,
+    .select:focus {
+      border-color: rgba(94,231,255,.7);
+      box-shadow: 0 0 0 4px rgba(94,231,255,.12);
+    }
+
+    .teams-box {
+      max-height: 330px;
+      overflow: auto;
+      display: grid;
+      gap: 10px;
+      padding-right: 4px;
+    }
+
+    .team-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.055);
+      border: 1px solid transparent;
+      transition: .2s ease;
+      user-select: none;
+    }
+
+    .team-option:hover {
+      border-color: var(--line);
+      background: rgba(255,255,255,.09);
+    }
+
+    .team-option input {
+      accent-color: #23e6a8;
+    }
+
+    .team-logo {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 18px;
+      border-radius: 18px;
+      color: #06101c;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      font-weight: 950;
+      box-shadow: 0 14px 35px rgba(35,230,168,.22);
+      transition: .2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    .btn.secondary {
+      color: var(--text);
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(94,231,255,.28), rgba(35,230,168,.2));
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 0 35px rgba(94,231,255,.2);
+      font-size: 25px;
+    }
+
+    .brand-title {
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-sub {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .hero {
+      border-radius: 38px;
+      padding: clamp(22px, 4vw, 42px);
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      right: -190px;
+      top: -210px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,211,106,.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 22px;
+      align-items: end;
+    }
+
+    .hero h2 {
+      font-size: clamp(36px, 7vw, 92px);
+      line-height: .9;
+      letter-spacing: -0.08em;
+      font-weight: 950;
+      max-width: 840px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #fff 0%, var(--blue) 40%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin-top: 18px;
+      line-height: 1.7;
+      max-width: 720px;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-stat {
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      border-radius: 22px;
+      padding: 16px;
+    }
+
+    .mini-stat b {
+      font-size: 28px;
+    }
+
+    .mini-stat span {
+      display: block;
+      color: var(--muted);
+      margin-top: 4px;
+      font-size: 13px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr auto auto;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .control {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.07);
+      color: var(--text);
+      border-radius: 18px;
+      padding: 13px 14px;
+      outline: none;
+      min-width: 0;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      white-space: nowrap;
+    }
+
+    .status-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .status-pill {
+      padding: 10px 13px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .status-pill.live {
+      color: var(--green);
+      border-color: rgba(35,230,168,.35);
+      background: rgba(35,230,168,.08);
+    }
+
+    .matches {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .match {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 18px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.11), rgba(255,255,255,.045));
+      box-shadow: 0 16px 40px rgba(0,0,0,.22);
+      position: relative;
+      overflow: hidden;
+      transition: .25s ease;
+    }
+
+    .match:hover {
+      transform: translateY(-5px);
+      border-color: rgba(94,231,255,.38);
+      box-shadow: 0 25px 65px rgba(0,0,0,.38);
+    }
+
+    .match.favorite::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(255,211,106,.8), transparent, rgba(94,231,255,.55));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .match-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .league {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .badge {
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 950;
+      color: var(--text);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.07);
+      white-space: nowrap;
+    }
+
+    .badge.live {
+      background: rgba(35,230,168,.14);
+      color: var(--green);
+      border-color: rgba(35,230,168,.42);
+      box-shadow: 0 0 25px rgba(35,230,168,.12);
+    }
+
+    .teams {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .side {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .crest {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      border-radius: 18px;
+      background: rgba(255,255,255,.08);
+      padding: 7px;
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .team-name {
+      font-weight: 900;
+      font-size: 14px;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .scorebox {
+      min-width: 86px;
+      border-radius: 22px;
+      padding: 12px 10px;
+      background: rgba(0,0,0,.24);
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .score {
+      font-size: 30px;
+      font-weight: 950;
+      letter-spacing: -0.05em;
+    }
+
+    .time {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .venue {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .empty, .error {
+      grid-column: 1 / -1;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 34px;
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .error {
+      color: #ffd1d8;
+      border-color: rgba(255,77,109,.35);
+      background: rgba(255,77,109,.08);
+    }
+
+    .loader {
+      grid-column: 1 / -1;
+      display: grid;
+      place-items: center;
+      min-height: 240px;
+      color: var(--muted);
+    }
+
+    .spinner {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,.12);
+      border-top-color: var(--green);
+      animation: spin .8s linear infinite;
+      margin-bottom: 14px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 80;
+      right: 18px;
+      bottom: 18px;
+      max-width: 420px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(10,14,31,.86);
+      backdrop-filter: blur(20px);
+      color: var(--text);
+      padding: 14px 16px;
+      box-shadow: var(--shadow);
+      transform: translateY(130%);
+      opacity: 0;
+      transition: .25s ease;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    [dir="rtl"] body {
+      font-family: Tahoma, Arial, sans-serif;
+    }
+
+    [dir="rtl"] .toast {
+      left: 18px;
+      right: auto;
+    }
+
+    @media (max-width: 1050px) {
+      .matches {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-content,
+      .setup-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .app {
+        width: min(100% - 22px, 1440px);
+        padding-top: 14px;
+      }
+
+      .matches {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .teams {
+        grid-template-columns: 1fr;
+      }
+
+      .scorebox {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
-
-<!-- INTRO -->
-<div id="intro" class="intro">
-
-  <div class="title">⚽ SPORT LIVE PRO</div>
-  <div class="subtitle">CHOISISSEZ VOTRE LIGUE</div>
-
-  <div class="grid">
-    <button class="btn l1" onclick="start('Ligue 1')">LIGUE 1</button>
-    <button class="btn pl" onclick="start('Premier League')">PREMIER LEAGUE</button>
-    <button class="btn ll" onclick="start('La Liga')">LA LIGA</button>
-    <button class="btn bu" onclick="start('Bundesliga')">BUNDESLIGA</button>
-    <button class="btn champ" onclick="start('Champions League')">CHAMPIONS</button>
-    <button class="btn saudi" onclick="start('Saudi')">SAOUDI</button>
-    <button class="btn portugal" onclick="start('Portugal')">PORTUGAL</button>
-    <button class="btn holland" onclick="start('Netherlands')">PAYS-BAS</button>
+  <div class="splash">
+    <div>
+      <div class="splash-ball"></div>
+      <div class="splash-title">KoraPulse</div>
+      <div class="splash-sub">Elite Live Football</div>
+    </div>
   </div>
 
-</div>
-
-<!-- APP -->
-<div id="app" class="app">
-
-<div class="topbar">⚽ SPORT LIVE</div>
-
-<div class="langs">
-<button>🇫🇷</button>
-<button>🇺🇸</button>
-<button>🇪🇸</button>
-<button>🇵🇹</button>
-<button>🇩🇪</button>
-<button>🇸🇦</button>
-</div>
-
-<div id="matches"></div>
-
-</div>
-
-<script>
-
-let selectedLeague="";
-
-const matches=[
-  {league:"Premier League",home:"Arsenal",away:"Chelsea",time:"21:00"},
-  {league:"Premier League",home:"Man City",away:"Liverpool",time:"18:30"},
-  {league:"Ligue 1",home:"PSG",away:"Marseille",time:"20:45"},
-  {league:"La Liga",home:"Real Madrid",away:"Barcelona",time:"21:00"},
-  {league:"Bundesliga",home:"Bayern",away:"Dortmund",time:"18:30"},
-  {league:"Champions League",home:"PSG",away:"Real Madrid",time:"21:00"},
-  {league:"Saudi",home:"Al Hilal",away:"Al Nassr",time:"20:00"},
-  {league:"Portugal",home:"Benfica",away:"Porto",time:"22:00"},
-  {league:"Netherlands",home:"Ajax",away:"PSV",time:"16:45"}
-];
-
-function start(league){
-  selectedLeague=league;
-
-  document.getElementById("intro").style.display="none";
-  document.getElementById("app").style.display="block";
-
-  render();
-}
-
-function render(){
-  const box=document.getElementById("matches");
-  box.innerHTML="";
-
-  matches.forEach(m=>{
-
-    if(!m.league.includes(selectedLeague))return;
-
-    box.innerHTML+=`
-      <div class="card">
-        🏆 ${m.league}
-        <span class="star">⭐</span><br><br>
-
-        ⚽ ${m.home} vs ${m.away}<br>
-        ⏰ ${m.time}
+  <div id="setup" class="setup">
+    <div class="setup-card glass">
+      <div class="setup-head">
+        <div class="eyebrow" data-i18n="setupEyebrow">Configuration</div>
+        <h1><span class="gradient-text" data-i18n="setupTitle">Ton centre de scores premium</span></h1>
+        <p class="lead" data-i18n="setupLead">
+          Choisis ta langue, ton fuseau horaire et tes équipes favorites. Seules les grandes premières divisions masculines demandées sont affichées.
+        </p>
       </div>
-    `;
-  });
-}
 
-</script>
+      <div class="setup-grid">
+        <div class="panel">
+          <h3 data-i18n="chooseLang">Langue</h3>
+          <div class="lang-grid" id="langGrid"></div>
 
+          <div class="field">
+            <label class="label" for="apiKey" data-i18n="apiKey">Clé API</label>
+            <input id="apiKey" class="input" type="password" placeholder="API-FOOTBALL / API-SPORTS key" />
+          </div>
+
+          <div class="field">
+            <label class="label" for="timezone" data-i18n="timezone">Fuseau horaire</label>
+            <select id="timezone" class="select"></select>
+          </div>
+
+          <div class="field">
+            <label class="label" data-i18n="leagues">Championnats</label>
+            <div class="league-grid" id="setupLeagues"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 data-i18n="favoriteTeams">Équipes favorites</h3>
+          <div class="field" style="margin-top:0">
+            <input id="teamSearch" class="input" type="search" data-i18n-placeholder="searchTeam" placeholder="Chercher une équipe..." />
+          </div>
+          <div style="display:flex; gap:10px; margin:12px 0; flex-wrap:wrap">
+            <button class="btn secondary" id="loadTeamsBtn" data-i18n="loadTeams">Charger les équipes</button>
+            <button class="btn secondary" id="clearFavBtn" data-i18n="clearFavorites">Vider favoris</button>
+          </div>
+          <div id="teamsBox" class="teams-box">
+            <div class="empty" data-i18n="teamsHelp">Entre ta clé API puis charge les équipes.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <small style="color:var(--muted)" data-i18n="keyWarning">
+          Sur GitHub Pages, une clé côté navigateur reste visible dans l’onglet Network. Pour une vraie production, utilise un proxy backend.
+        </small>
+        <button class="btn" id="startBtn" data-i18n="startApp">Lancer l’application</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">⚽</div>
+        <div>
+          <div class="brand-title">KoraPulse Elite</div>
+          <div class="brand-sub" data-i18n="brandSub">Scores live, horaires précis, favoris</div>
+        </div>
+      </div>
+      <button class="btn secondary" id="settingsBtn" data-i18n="settings">Réglages</button>
+    </header>
+
+    <section class="hero glass">
+      <div class="hero-content">
+        <div>
+          <div class="eyebrow" data-i18n="heroEyebrow">Football premium</div>
+          <h2><span data-i18n="heroTitleA">Les vrais matchs.</span><br><span class="gradient-text" data-i18n="heroTitleB">Au bon moment.</span></h2>
+          <p data-i18n="heroText">
+            Matchs live et à venir, sans résultats terminés. Premier League, Bundesliga, Ligue 1, La Liga, Primeira Liga, Saudi Pro League et Eredivisie.
+          </p>
+        </div>
+
+        <div class="hero-side">
+          <div class="mini-stat">
+            <b id="liveCount">0</b>
+            <span data-i18n="liveMatches">Matchs live</span>
+          </div>
+          <div class="mini-stat">
+            <b id="nextKickoff">--:--</b>
+            <span data-i18n="nextKickoff">Prochain coup d’envoi</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="controls">
+      <select id="mainLang" class="control"></select>
+      <select id="mainTimezone" class="control"></select>
+      <input id="matchDate" class="control" type="date" />
+      <button id="favOnlyBtn" class="control toggle">⭐ <span data-i18n="favoritesOnly">Favoris</span></button>
+      <button id="refreshBtn" class="control toggle">↻ <span data-i18n="refresh">Actualiser</span></button>
+    </section>
+
+    <div class="status-row" id="leagueFilters"></div>
+    <div class="status-row" id="statusRow"></div>
+
+    <section id="matches" class="matches"></section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    /******************************************************************
+     * 1) METS TA CLÉ ICI SI TU VEUX LA CODER DIRECTEMENT
+     * Sinon, laisse tel quel : l’app te demandera la clé au démarrage.
+     ******************************************************************/
+    const DEFAULT_API_KEY = "4fb057e1e61d3dd92a6883d7a8676903";
+
+    /******************************************************************
+     * API-FOOTBALL / API-SPORTS v3
+     ******************************************************************/
+    const API_BASE = "https://v3.football.api-sports.io";
+
+    const TOP_LEAGUES = [
+      { id: 39,  name: "Premier League",   country: "England",      flag: "🏴", short: "EPL" },
+      { id: 78,  name: "Bundesliga",       country: "Germany",      flag: "🇩🇪", short: "BUN" },
+      { id: 61,  name: "Ligue 1",          country: "France",       flag: "🇫🇷", short: "L1" },
+      { id: 140, name: "La Liga",          country: "Spain",        flag: "🇪🇸", short: "LAL" },
+      { id: 94,  name: "Primeira Liga",    country: "Portugal",     flag: "🇵🇹", short: "POR" },
+      { id: 307, name: "Saudi Pro League", country: "Saudi Arabia", flag: "🇸🇦", short: "SPL" },
+      { id: 88,  name: "Eredivisie",       country: "Netherlands",  flag: "🇳🇱", short: "ERE" }
+    ];
+
+    const LANGS = [
+      { code: "fr", label: "Français" },
+      { code: "en", label: "English" },
+      { code: "ar", label: "العربية" },
+      { code: "es", label: "Español" },
+      { code: "de", label: "Deutsch" },
+      { code: "pt", label: "Português" },
+      { code: "nl", label: "Nederlands" }
+    ];
+
+    const I18N = {
+      fr: {
+        setupEyebrow: "Configuration",
+        setupTitle: "Ton centre de scores premium",
+        setupLead: "Choisis ta langue, ton fuseau horaire et tes équipes favorites. Seules les grandes premières divisions masculines demandées sont affichées.",
+        chooseLang: "Langue",
+        apiKey: "Clé API",
+        timezone: "Fuseau horaire",
+        leagues: "Championnats",
+        favoriteTeams: "Équipes favorites",
+        searchTeam: "Chercher une équipe...",
+        loadTeams: "Charger les équipes",
+        clearFavorites: "Vider favoris",
+        teamsHelp: "Entre ta clé API puis charge les équipes.",
+        startApp: "Lancer l’application",
+        keyWarning: "Sur GitHub Pages, une clé côté navigateur reste visible dans l’onglet Network. Pour une vraie production, utilise un proxy backend.",
+        brandSub: "Scores live, horaires précis, favoris",
+        settings: "Réglages",
+        heroEyebrow: "Football premium",
+        heroTitleA: "Les vrais matchs.",
+        heroTitleB: "Au bon moment.",
+        heroText: "Matchs live et à venir, sans résultats terminés. Premier League, Bundesliga, Ligue 1, La Liga, Primeira Liga, Saudi Pro League et Eredivisie.",
+        liveMatches: "Matchs live",
+        nextKickoff: "Prochain coup d’envoi",
+        favoritesOnly: "Favoris",
+        refresh: "Actualiser",
+        loading: "Chargement des matchs...",
+        noMatches: "Aucun match live ou à venir pour cette date. Les matchs terminés sont cachés.",
+        apiMissing: "Ajoute ta clé API dans les réglages.",
+        apiError: "Erreur API. Vérifie ta clé, ton quota ou ta connexion.",
+        loaded: "Données actualisées.",
+        teamsLoaded: "Équipes chargées.",
+        favoritesSaved: "Favoris enregistrés.",
+        today: "Aujourd’hui",
+        upcoming: "À venir",
+        live: "LIVE",
+        minute: "min",
+        postponed: "Reporté",
+        noVenue: "Stade non communiqué"
+      },
+      en: {
+        setupEyebrow: "Setup",
+        setupTitle: "Your premium score center",
+        setupLead: "Choose your language, timezone and favorite teams. Only the requested top men’s first divisions are displayed.",
+        chooseLang: "Language",
+        apiKey: "API key",
+        timezone: "Timezone",
+        leagues: "Leagues",
+        favoriteTeams: "Favorite teams",
+        searchTeam: "Search a team...",
+        loadTeams: "Load teams",
+        clearFavorites: "Clear favorites",
+        teamsHelp: "Enter your API key, then load teams.",
+        startApp: "Start app",
+        keyWarning: "On GitHub Pages, a browser-side key is visible in the Network tab. For real production, use a backend proxy.",
+        brandSub: "Live scores, exact times, favorites",
+        settings: "Settings",
+        heroEyebrow: "Premium football",
+        heroTitleA: "Real matches.",
+        heroTitleB: "Right on time.",
+        heroText: "Live and upcoming matches, no finished results. Premier League, Bundesliga, Ligue 1, La Liga, Primeira Liga, Saudi Pro League and Eredivisie.",
+        liveMatches: "Live matches",
+        nextKickoff: "Next kickoff",
+        favoritesOnly: "Favorites",
+        refresh: "Refresh",
+        loading: "Loading matches...",
+        noMatches: "No live or upcoming match for this date. Finished matches are hidden.",
+        apiMissing: "Add your API key in settings.",
+        apiError: "API error. Check your key, quota or connection.",
+        loaded: "Data refreshed.",
+        teamsLoaded: "Teams loaded.",
+        favoritesSaved: "Favorites saved.",
+        today: "Today",
+        upcoming: "Upcoming",
+        live: "LIVE",
+        minute: "min",
+        postponed: "Postponed",
+        noVenue: "Venue unavailable"
+      },
+      ar: {
+        setupEyebrow: "الإعداد",
+        setupTitle: "مركز نتائج احترافي",
+        setupLead: "اختر اللغة والمنطقة الزمنية والفرق المفضلة. يتم عرض الدوريات الرجالية الأولى فقط.",
+        chooseLang: "اللغة",
+        apiKey: "مفتاح API",
+        timezone: "المنطقة الزمنية",
+        leagues: "الدوريات",
+        favoriteTeams: "الفرق المفضلة",
+        searchTeam: "ابحث عن فريق...",
+        loadTeams: "تحميل الفرق",
+        clearFavorites: "حذف المفضلة",
+        teamsHelp: "أدخل مفتاح API ثم حمّل الفرق.",
+        startApp: "تشغيل التطبيق",
+        keyWarning: "على GitHub Pages، المفتاح داخل المتصفح يمكن رؤيته من Network. للإنتاج الحقيقي استخدم proxy خلفي.",
+        brandSub: "نتائج مباشرة، توقيت دقيق، مفضلة",
+        settings: "الإعدادات",
+        heroEyebrow: "كرة قدم احترافية",
+        heroTitleA: "مباريات حقيقية.",
+        heroTitleB: "في الوقت الصحيح.",
+        heroText: "مباريات مباشرة وقادمة بدون مباريات منتهية. الدوريات الكبرى فقط.",
+        liveMatches: "مباريات مباشرة",
+        nextKickoff: "المباراة القادمة",
+        favoritesOnly: "المفضلة",
+        refresh: "تحديث",
+        loading: "جاري تحميل المباريات...",
+        noMatches: "لا توجد مباريات مباشرة أو قادمة لهذا التاريخ. المباريات المنتهية مخفية.",
+        apiMissing: "أضف مفتاح API في الإعدادات.",
+        apiError: "خطأ API. تحقق من المفتاح أو الحصة أو الاتصال.",
+        loaded: "تم تحديث البيانات.",
+        teamsLoaded: "تم تحميل الفرق.",
+        favoritesSaved: "تم حفظ المفضلة.",
+        today: "اليوم",
+        upcoming: "قادمة",
+        live: "مباشر",
+        minute: "دقيقة",
+        postponed: "مؤجلة",
+        noVenue: "الملعب غير متوفر"
+      },
+      es: {
+        setupEyebrow: "Configuración",
+        setupTitle: "Tu centro premium de marcadores",
+        setupLead: "Elige idioma, zona horaria y equipos favoritos. Solo se muestran primeras divisiones masculinas.",
+        chooseLang: "Idioma",
+        apiKey: "Clave API",
+        timezone: "Zona horaria",
+        leagues: "Ligas",
+        favoriteTeams: "Equipos favoritos",
+        searchTeam: "Buscar equipo...",
+        loadTeams: "Cargar equipos",
+        clearFavorites: "Vaciar favoritos",
+        teamsHelp: "Introduce tu clave API y carga los equipos.",
+        startApp: "Iniciar app",
+        keyWarning: "En GitHub Pages, una clave en el navegador es visible en Network. Para producción real usa un proxy backend.",
+        brandSub: "Marcadores en vivo, horarios exactos, favoritos",
+        settings: "Ajustes",
+        heroEyebrow: "Fútbol premium",
+        heroTitleA: "Partidos reales.",
+        heroTitleB: "A la hora exacta.",
+        heroText: "Partidos en vivo y próximos, sin resultados finalizados.",
+        liveMatches: "Partidos en vivo",
+        nextKickoff: "Próximo inicio",
+        favoritesOnly: "Favoritos",
+        refresh: "Actualizar",
+        loading: "Cargando partidos...",
+        noMatches: "No hay partidos en vivo o próximos para esta fecha. Los finalizados están ocultos.",
+        apiMissing: "Añade tu clave API en ajustes.",
+        apiError: "Error API. Revisa clave, cuota o conexión.",
+        loaded: "Datos actualizados.",
+        teamsLoaded: "Equipos cargados.",
+        favoritesSaved: "Favoritos guardados.",
+        today: "Hoy",
+        upcoming: "Próximo",
+        live: "LIVE",
+        minute: "min",
+        postponed: "Aplazado",
+        noVenue: "Estadio no disponible"
+      },
+      de: {
+        setupEyebrow: "Setup",
+        setupTitle: "Dein Premium-Scorecenter",
+        setupLead: "Wähle Sprache, Zeitzone und Lieblingsteams. Nur die gewünschten ersten Männerligen werden angezeigt.",
+        chooseLang: "Sprache",
+        apiKey: "API-Schlüssel",
+        timezone: "Zeitzone",
+        leagues: "Ligen",
+        favoriteTeams: "Lieblingsteams",
+        searchTeam: "Team suchen...",
+        loadTeams: "Teams laden",
+        clearFavorites: "Favoriten löschen",
+        teamsHelp: "API-Schlüssel eingeben und Teams laden.",
+        startApp: "App starten",
+        keyWarning: "Auf GitHub Pages ist ein Browser-Schlüssel im Network-Tab sichtbar. Für Produktion Backend-Proxy nutzen.",
+        brandSub: "Live-Scores, genaue Zeiten, Favoriten",
+        settings: "Einstellungen",
+        heroEyebrow: "Premium-Fußball",
+        heroTitleA: "Echte Spiele.",
+        heroTitleB: "Zur richtigen Zeit.",
+        heroText: "Live- und kommende Spiele, ohne beendete Ergebnisse.",
+        liveMatches: "Live-Spiele",
+        nextKickoff: "Nächster Anstoß",
+        favoritesOnly: "Favoriten",
+        refresh: "Aktualisieren",
+        loading: "Spiele werden geladen...",
+        noMatches: "Keine Live- oder kommenden Spiele an diesem Datum. Beendete Spiele sind versteckt.",
+        apiMissing: "API-Schlüssel in Einstellungen hinzufügen.",
+        apiError: "API-Fehler. Schlüssel, Limit oder Verbindung prüfen.",
+        loaded: "Daten aktualisiert.",
+        teamsLoaded: "Teams geladen.",
+        favoritesSaved: "Favoriten gespeichert.",
+        today: "Heute",
+        upcoming: "Kommend",
+        live: "LIVE",
+        minute: "Min",
+        postponed: "Verschoben",
+        noVenue: "Stadion nicht verfügbar"
+      },
+      pt: {
+        setupEyebrow: "Configuração",
+        setupTitle: "O teu centro premium de resultados",
+        setupLead: "Escolhe idioma, fuso horário e equipas favoritas. Só aparecem primeiras divisões masculinas.",
+        chooseLang: "Idioma",
+        apiKey: "Chave API",
+        timezone: "Fuso horário",
+        leagues: "Ligas",
+        favoriteTeams: "Equipas favoritas",
+        searchTeam: "Procurar equipa...",
+        loadTeams: "Carregar equipas",
+        clearFavorites: "Limpar favoritos",
+        teamsHelp: "Insere a chave API e carrega as equipas.",
+        startApp: "Iniciar app",
+        keyWarning: "No GitHub Pages, uma chave no navegador fica visível em Network. Para produção real usa proxy backend.",
+        brandSub: "Resultados ao vivo, horários exatos, favoritos",
+        settings: "Definições",
+        heroEyebrow: "Futebol premium",
+        heroTitleA: "Jogos reais.",
+        heroTitleB: "Na hora certa.",
+        heroText: "Jogos ao vivo e próximos, sem resultados terminados.",
+        liveMatches: "Jogos ao vivo",
+        nextKickoff: "Próximo início",
+        favoritesOnly: "Favoritos",
+        refresh: "Atualizar",
+        loading: "A carregar jogos...",
+        noMatches: "Nenhum jogo ao vivo ou próximo nesta data. Jogos terminados estão ocultos.",
+        apiMissing: "Adiciona a chave API nas definições.",
+        apiError: "Erro API. Verifica chave, limite ou ligação.",
+        loaded: "Dados atualizados.",
+        teamsLoaded: "Equipas carregadas.",
+        favoritesSaved: "Favoritos guardados.",
+        today: "Hoje",
+        upcoming: "Próximo",
+        live: "LIVE",
+        minute: "min",
+        postponed: "Adiado",
+        noVenue: "Estádio indisponível"
+      },
+      nl: {
+        setupEyebrow: "Instelling",
+        setupTitle: "Jouw premium scorecentrum",
+        setupLead: "Kies taal, tijdzone en favoriete teams. Alleen gevraagde hoogste mannencompetities worden getoond.",
+        chooseLang: "Taal",
+        apiKey: "API-sleutel",
+        timezone: "Tijdzone",
+        leagues: "Competities",
+        favoriteTeams: "Favoriete teams",
+        searchTeam: "Team zoeken...",
+        loadTeams: "Teams laden",
+        clearFavorites: "Favorieten wissen",
+        teamsHelp: "Voer je API-sleutel in en laad teams.",
+        startApp: "App starten",
+        keyWarning: "Op GitHub Pages is een browsersleutel zichtbaar in Network. Gebruik voor productie een backend-proxy.",
+        brandSub: "Live scores, exacte tijden, favorieten",
+        settings: "Instellingen",
+        heroEyebrow: "Premium voetbal",
+        heroTitleA: "Echte wedstrijden.",
+        heroTitleB: "Op het juiste moment.",
+        heroText: "Live en komende wedstrijden, zonder afgelopen resultaten.",
+        liveMatches: "Live wedstrijden",
+        nextKickoff: "Volgende aftrap",
+        favoritesOnly: "Favorieten",
+        refresh: "Vernieuwen",
+        loading: "Wedstrijden laden...",
+        noMatches: "Geen live of komende wedstrijd op deze datum. Afgelopen wedstrijden zijn verborgen.",
+        apiMissing: "Voeg je API-sleutel toe in instellingen.",
+        apiError: "API-fout. Controleer sleutel, quota of verbinding.",
+        loaded: "Gegevens vernieuwd.",
+        teamsLoaded: "Teams geladen.",
+        favoritesSaved: "Favorieten opgeslagen.",
+        today: "Vandaag",
+        upcoming: "Komend",
+        live: "LIVE",
+        minute: "min",
+        postponed: "Uitgesteld",
+        noVenue: "Stadion onbekend"
+      }
+    };
+
+    const COMMON_TIMEZONES = [
+      "Europe/Paris",
+      "Europe/London",
+      "Europe/Madrid",
+      "Europe/Berlin",
+      "Europe/Amsterdam",
+      "Europe/Lisbon",
+      "Asia/Riyadh",
+      "Africa/Casablanca",
+      "Africa/Algiers",
+      "Africa/Tunis",
+      "Africa/Cairo",
+      "Asia/Dubai",
+      "Asia/Qatar",
+      "America/New_York"
+    ];
+
+    const FINISHED_STATUSES = new Set(["FT", "AET", "PEN", "CANC", "ABD", "AWD", "WO"]);
+    const LIVE_STATUSES = new Set(["1H", "HT", "2H", "ET", "BT", "P", "SUSP", "INT", "LIVE"]);
+    const UPCOMING_STATUSES = new Set(["NS", "TBD", "PST"]);
+
+    const state = {
+      lang: localStorage.getItem("kp_lang") || "fr",
+      timezone: localStorage.getItem("kp_timezone") || Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Paris",
+      apiKey: localStorage.getItem("kp_api_key") || (DEFAULT_API_KEY === "PUT_YOUR_API_KEY_HERE" ? "" : DEFAULT_API_KEY),
+      selectedLeagues: JSON.parse(localStorage.getItem("kp_leagues") || JSON.stringify(TOP_LEAGUES.map(l => l.id))),
+      favorites: JSON.parse(localStorage.getItem("kp_favorites") || "[]"),
+      teams: JSON.parse(localStorage.getItem("kp_teams") || "[]"),
+      favOnly: false,
+      date: todayISO()
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const t = (key) => (I18N[state.lang] && I18N[state.lang][key]) || I18N.fr[key] || key;
+
+    function todayISO() {
+      const d = new Date();
+      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      return d.toISOString().slice(0, 10);
+    }
+
+    function currentSeason() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1;
+      return month >= 7 ? year : year - 1;
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function toast(message) {
+      $("toast").textContent = message;
+      $("toast").classList.add("show");
+      setTimeout(() => $("toast").classList.remove("show"), 3200);
+    }
+
+    function saveState() {
+      localStorage.setItem("kp_lang", state.lang);
+      localStorage.setItem("kp_timezone", state.timezone);
+      localStorage.setItem("kp_api_key", state.apiKey);
+      localStorage.setItem("kp_leagues", JSON.stringify(state.selectedLeagues));
+      localStorage.setItem("kp_favorites", JSON.stringify(state.favorites));
+      localStorage.setItem("kp_teams", JSON.stringify(state.teams));
+    }
+
+    function applyI18n() {
+      document.documentElement.lang = state.lang;
+      document.documentElement.dir = state.lang === "ar" ? "rtl" : "ltr";
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        el.textContent = t(el.dataset.i18n);
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        el.placeholder = t(el.dataset.i18nPlaceholder);
+      });
+
+      renderLanguageControls();
+    }
+
+    function renderLanguageControls() {
+      const langGrid = $("langGrid");
+      const mainLang = $("mainLang");
+
+      langGrid.innerHTML = LANGS.map(lang => `
+        <button class="chip ${state.lang === lang.code ? "active" : ""}" data-lang="${lang.code}">
+          ${escapeHTML(lang.label)}
+        </button>
+      `).join("");
+
+      mainLang.innerHTML = LANGS.map(lang => `
+        <option value="${lang.code}" ${state.lang === lang.code ? "selected" : ""}>
+          ${escapeHTML(lang.label)}
+        </option>
+      `).join("");
+
+      langGrid.querySelectorAll("[data-lang]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.lang = btn.dataset.lang;
+          saveState();
+          applyI18n();
+          renderAllStatic();
+          renderTeams();
+        });
+      });
+
+      mainLang.onchange = () => {
+        state.lang = mainLang.value;
+        saveState();
+        applyI18n();
+        renderAllStatic();
+        renderTeams();
+        loadMatches();
+      };
+    }
+
+    function renderTimezones() {
+      const tzs = Array.from(new Set([state.timezone, ...COMMON_TIMEZONES])).filter(Boolean);
+
+      $("timezone").innerHTML = tzs.map(z => `
+        <option value="${escapeHTML(z)}" ${state.timezone === z ? "selected" : ""}>${escapeHTML(z)}</option>
+      `).join("");
+
+      $("mainTimezone").innerHTML = $("timezone").innerHTML;
+
+      $("timezone").onchange = () => {
+        state.timezone = $("timezone").value;
+        $("mainTimezone").value = state.timezone;
+        saveState();
+      };
+
+      $("mainTimezone").onchange = () => {
+        state.timezone = $("mainTimezone").value;
+        $("timezone").value = state.timezone;
+        saveState();
+        loadMatches();
+      };
+    }
+
+    function renderLeagues() {
+      const setup = $("setupLeagues");
+      const filters = $("leagueFilters");
+
+      const html = TOP_LEAGUES.map(league => `
+        <button class="chip ${state.selectedLeagues.includes(league.id) ? "active" : ""}" data-league="${league.id}">
+          ${league.flag} ${escapeHTML(league.name)}
+        </button>
+      `).join("");
+
+      setup.innerHTML = html;
+      filters.innerHTML = html;
+
+      document.querySelectorAll("[data-league]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = Number(btn.dataset.league);
+          if (state.selectedLeagues.includes(id)) {
+            state.selectedLeagues = state.selectedLeagues.filter(x => x !== id);
+          } else {
+            state.selectedLeagues.push(id);
+          }
+
+          if (!state.selectedLeagues.length) {
+            state.selectedLeagues = TOP_LEAGUES.map(l => l.id);
+          }
+
+          saveState();
+          renderLeagues();
+          loadMatches();
+        });
+      });
+    }
+
+    function renderAllStatic() {
+      renderTimezones();
+      renderLeagues();
+      $("apiKey").value = state.apiKey || "";
+      $("matchDate").value = state.date;
+    }
+
+    async function apiFetch(path, params = {}) {
+      if (!state.apiKey) {
+        throw new Error(t("apiMissing"));
+      }
+
+      const url = new URL(API_BASE + path);
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          url.searchParams.set(key, value);
+        }
+      });
+
+      const response = await fetch(url.toString(), {
+        method: "GET",
+        headers: {
+          "x-apisports-key": state.apiKey
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`${t("apiError")} HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.errors && Array.isArray(data.errors) && data.errors.length) {
+        throw new Error(data.errors.join(", "));
+      }
+
+      if (data.errors && typeof data.errors === "object" && Object.keys(data.errors).length) {
+        throw new Error(Object.values(data.errors).join(", "));
+      }
+
+      return data.response || [];
+    }
+
+    function cacheKey(name, extra = "") {
+      return `kp_cache_${name}_${extra}`;
+    }
+
+    function getCache(key, maxAgeMs) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (Date.now() - parsed.time > maxAgeMs) return null;
+        return parsed.data;
+      } catch {
+        return null;
+      }
+    }
+
+    function setCache(key, data) {
+      localStorage.setItem(key, JSON.stringify({ time: Date.now(), data }));
+    }
+
+    async function loadTeams() {
+      try {
+        state.apiKey = $("apiKey").value.trim();
+        saveState();
+
+        if (!state.apiKey) {
+          toast(t("apiMissing"));
+          return;
+        }
+
+        $("teamsBox").innerHTML = `<div class="loader"><div><div class="spinner"></div>${escapeHTML(t("loading"))}</div></div>`;
+
+        const season = currentSeason();
+        const key = cacheKey("teams", `${season}_${state.selectedLeagues.join("-")}`);
+        const cached = getCache(key, 1000 * 60 * 60 * 24);
+
+        let teams;
+
+        if (cached) {
+          teams = cached;
+        } else {
+          const results = await Promise.all(
+            state.selectedLeagues.map(async leagueId => {
+              const league = TOP_LEAGUES.find(l => l.id === leagueId);
+              const rows = await apiFetch("/teams", { league: leagueId, season });
+              return rows.map(row => ({
+                id: row.team.id,
+                name: row.team.name,
+                logo: row.team.logo,
+                leagueId,
+                leagueName: league?.name || ""
+              }));
+            })
+          );
+
+          teams = results.flat()
+            .filter((team, index, arr) => arr.findIndex(x => x.id === team.id) === index)
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+          setCache(key, teams);
+        }
+
+        state.teams = teams;
+        saveState();
+        renderTeams();
+        toast(t("teamsLoaded"));
+      } catch (err) {
+        $("teamsBox").innerHTML = `<div class="error">${escapeHTML(err.message || t("apiError"))}</div>`;
+      }
+    }
+
+    function renderTeams() {
+      const q = $("teamSearch").value.trim().toLowerCase();
+      const teams = state.teams.filter(team => {
+        const matchesSearch = !q || team.name.toLowerCase().includes(q) || team.leagueName.toLowerCase().includes(q);
+        const matchesLeague = state.selectedLeagues.includes(team.leagueId);
+        return matchesSearch && matchesLeague;
+      });
+
+      if (!teams.length) {
+        $("teamsBox").innerHTML = `<div class="empty">${escapeHTML(t("teamsHelp"))}</div>`;
+        return;
+      }
+
+      $("teamsBox").innerHTML = teams.map(team => `
+        <label class="team-option">
+          <input type="checkbox" value="${team.id}" ${state.favorites.includes(team.id) ? "checked" : ""}>
+          <img class="team-logo" src="${escapeHTML(team.logo)}" alt="">
+          <span>
+            <b>${escapeHTML(team.name)}</b><br>
+            <small style="color:var(--muted)">${escapeHTML(team.leagueName)}</small>
+          </span>
+        </label>
+      `).join("");
+
+      $("teamsBox").querySelectorAll("input[type='checkbox']").forEach(input => {
+        input.addEventListener("change", () => {
+          const id = Number(input.value);
+
+          if (input.checked) {
+            if (!state.favorites.includes(id)) state.favorites.push(id);
+          } else {
+            state.favorites = state.favorites.filter(x => x !== id);
+          }
+
+          saveState();
+          toast(t("favoritesSaved"));
+        });
+      });
+    }
+
+    async function loadMatches() {
+      const container = $("matches");
+      container.innerHTML = `<div class="loader"><div><div class="spinner"></div>${escapeHTML(t("loading"))}</div></div>`;
+
+      try {
+        state.apiKey = $("apiKey").value.trim() || state.apiKey;
+        state.date = $("matchDate").value || todayISO();
+        saveState();
+
+        if (!state.apiKey) {
+          container.innerHTML = `<div class="error">${escapeHTML(t("apiMissing"))}</div>`;
+          return;
+        }
+
+        const key = cacheKey("fixtures", `${state.date}_${state.timezone}_${state.selectedLeagues.join("-")}`);
+        const cacheMaxAge = state.date === todayISO() ? 1000 * 45 : 1000 * 60 * 6;
+        const cached = getCache(key, cacheMaxAge);
+
+        let fixtures;
+
+        if (cached) {
+          fixtures = cached;
+        } else {
+          fixtures = await apiFetch("/fixtures", {
+            date: state.date,
+            timezone: state.timezone
+          });
+          setCache(key, fixtures);
+        }
+
+        let matches = fixtures
+          .filter(item => state.selectedLeagues.includes(item.league?.id))
+          .filter(item => !FINISHED_STATUSES.has(item.fixture?.status?.short))
+          .filter(item => LIVE_STATUSES.has(item.fixture?.status?.short) || UPCOMING_STATUSES.has(item.fixture?.status?.short));
+
+        if (state.favOnly) {
+          matches = matches.filter(item =>
+            state.favorites.includes(item.teams.home.id) ||
+            state.favorites.includes(item.teams.away.id)
+          );
+        }
+
+        matches.sort((a, b) => {
+          const af = Number(state.favorites.includes(a.teams.home.id) || state.favorites.includes(a.teams.away.id));
+          const bf = Number(state.favorites.includes(b.teams.home.id) || state.favorites.includes(b.teams.away.id));
+          const al = Number(LIVE_STATUSES.has(a.fixture.status.short));
+          const bl = Number(LIVE_STATUSES.has(b.fixture.status.short));
+          return bf - af || bl - al || new Date(a.fixture.date) - new Date(b.fixture.date);
+        });
+
+        renderMatches(matches);
+        toast(t("loaded"));
+      } catch (err) {
+        container.innerHTML = `<div class="error">${escapeHTML(err.message || t("apiError"))}</div>`;
+      }
+    }
+
+    function renderMatches(matches) {
+      const container = $("matches");
+
+      const liveCount = matches.filter(m => LIVE_STATUSES.has(m.fixture.status.short)).length;
+      const upcomingCount = matches.filter(m => UPCOMING_STATUSES.has(m.fixture.status.short)).length;
+      const favoriteCount = matches.filter(m =>
+        state.favorites.includes(m.teams.home.id) ||
+        state.favorites.includes(m.teams.away.id)
+      ).length;
+
+      $("liveCount").textContent = liveCount;
+
+      const next = matches
+        .filter(m => UPCOMING_STATUSES.has(m.fixture.status.short))
+        .sort((a, b) => new Date(a.fixture.date) - new Date(b.fixture.date))[0];
+
+      $("nextKickoff").textContent = next ? formatTime(next.fixture.date) : "--:--";
+
+      $("statusRow").innerHTML = `
+        <span class="status-pill live">● ${liveCount} ${escapeHTML(t("liveMatches"))}</span>
+        <span class="status-pill">⏱ ${upcomingCount} ${escapeHTML(t("upcoming"))}</span>
+        <span class="status-pill">⭐ ${favoriteCount} ${escapeHTML(t("favoritesOnly"))}</span>
+        <span class="status-pill">🌍 ${escapeHTML(state.timezone)}</span>
+      `;
+
+      if (!matches.length) {
+        container.innerHTML = `<div class="empty">${escapeHTML(t("noMatches"))}</div>`;
+        return;
+      }
+
+      container.innerHTML = matches.map(matchCard).join("");
+    }
+
+    function matchCard(item) {
+      const status = item.fixture.status.short;
+      const isLive = LIVE_STATUSES.has(status);
+      const isFav = state.favorites.includes(item.teams.home.id) || state.favorites.includes(item.teams.away.id);
+      const league = TOP_LEAGUES.find(l => l.id === item.league.id);
+      const homeGoals = item.goals.home ?? 0;
+      const awayGoals = item.goals.away ?? 0;
+
+      const statusText = isLive
+        ? `${t("live")} ${item.fixture.status.elapsed ? item.fixture.status.elapsed + "'" : ""}`
+        : status === "PST"
+          ? t("postponed")
+          : formatFullDate(item.fixture.date);
+
+      const score = isLive ? `${homeGoals} - ${awayGoals}` : "vs";
+
+      return `
+        <article class="match ${isFav ? "favorite" : ""}">
+          <div class="match-top">
+            <div class="league">
+              <span>${league?.flag || "⚽"}</span>
+              <span>${escapeHTML(item.league.name)}</span>
+            </div>
+            <div class="badge ${isLive ? "live" : ""}">
+              ${escapeHTML(statusText)}
+            </div>
+          </div>
+
+          <div class="teams">
+            <div class="side">
+              <img class="crest" src="${escapeHTML(item.teams.home.logo)}" alt="">
+              <div class="team-name">${escapeHTML(item.teams.home.name)}</div>
+            </div>
+
+            <div class="scorebox">
+              <div class="score">${escapeHTML(score)}</div>
+              <div class="time">${escapeHTML(formatTime(item.fixture.date))}</div>
+            </div>
+
+            <div class="side">
+              <img class="crest" src="${escapeHTML(item.teams.away.logo)}" alt="">
+              <div class="team-name">${escapeHTML(item.teams.away.name)}</div>
+            </div>
+          </div>
+
+          <div class="venue">📍 ${escapeHTML(item.fixture.venue?.name || t("noVenue"))}</div>
+        </article>
+      `;
+    }
+
+    function formatTime(dateValue) {
+      return new Intl.DateTimeFormat(state.lang, {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: state.timezone
+      }).format(new Date(dateValue));
+    }
+
+    function formatFullDate(dateValue) {
+      return new Intl.DateTimeFormat(state.lang, {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: state.timezone
+      }).format(new Date(dateValue));
+    }
+
+    function initEvents() {
+      $("loadTeamsBtn").addEventListener("click", loadTeams);
+
+      $("clearFavBtn").addEventListener("click", () => {
+        state.favorites = [];
+        saveState();
+        renderTeams();
+        toast(t("favoritesSaved"));
+      });
+
+      $("teamSearch").addEventListener("input", renderTeams);
+
+      $("startBtn").addEventListener("click", () => {
+        state.apiKey = $("apiKey").value.trim();
+        state.timezone = $("timezone").value;
+        saveState();
+        $("setup").classList.add("hidden");
+        loadMatches();
+      });
+
+      $("settingsBtn").addEventListener("click", () => {
+        $("setup").classList.remove("hidden");
+        renderTeams();
+      });
+
+      $("refreshBtn").addEventListener("click", () => {
+        Object.keys(localStorage)
+          .filter(key => key.startsWith("kp_cache_fixtures"))
+          .forEach(key => localStorage.removeItem(key));
+        loadMatches();
+      });
+
+      $("favOnlyBtn").addEventListener("click", () => {
+        state.favOnly = !state.favOnly;
+        $("favOnlyBtn").classList.toggle("active", state.favOnly);
+        loadMatches();
+      });
+
+      $("matchDate").addEventListener("change", () => {
+        state.date = $("matchDate").value;
+        loadMatches();
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden && $("setup").classList.contains("hidden")) loadMatches();
+      });
+    }
+
+    function init() {
+      applyI18n();
+      renderAllStatic();
+      initEvents();
+
+      if (state.teams.length) renderTeams();
+
+      if (state.apiKey) {
+        $("setup").classList.add("hidden");
+      }
+
+      loadMatches();
+
+      setInterval(() => {
+        if ($("setup").classList.contains("hidden") && state.date === todayISO()) {
+          Object.keys(localStorage)
+            .filter(key => key.startsWith("kp_cache_fixtures"))
+            .forEach(key => localStorage.removeItem(key));
+          loadMatches();
+        }
+      }, 60000);
+    }
+
+    init();
+  </script>
 </body>
 </html>
+
