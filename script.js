@@ -1,4 +1,4 @@
-const API_KEY = "TON_API_KEY_ICI";
+const API_KEY = "4fb057e1e61d3dd92a6883d7a8676903";
 
 document.getElementById("date").innerText =
   "📅 " + new Date().toLocaleDateString();
