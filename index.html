@@ -3,75 +3,103 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FootLive Pro - Scores, chaînes TV & matchs</title>
-  <meta name="description" content="Site live score foot avec horaires, chaînes TV, compétitions, détails de match et interface multilingue." />
+  <title>FootNova Ultimate - Live Football App</title>
+  <meta name="description" content="Application web football premium : scores live, chaînes TV, statistiques, compositions, classement, favoris, calendrier et alertes." />
+  <meta name="theme-color" content="#07110b" />
   <style>
     :root {
-      --bg: #070b12;
-      --bg-soft: #0d1320;
-      --panel: #111827;
-      --panel-2: #151f31;
-      --card: rgba(255,255,255,.06);
-      --border: rgba(255,255,255,.10);
-      --border-strong: rgba(255,255,255,.18);
+      --bg: #050814;
+      --bg2: #080d1b;
+      --card: rgba(14, 22, 40, .88);
+      --card2: rgba(22, 33, 58, .90);
+      --glass: rgba(255, 255, 255, .07);
+      --glass2: rgba(255, 255, 255, .11);
+      --border: rgba(255, 255, 255, .12);
+      --border2: rgba(255, 255, 255, .22);
       --text: #f8fafc;
       --muted: #94a3b8;
-      --muted-2: #64748b;
-      --accent: #22c55e;
-      --accent-2: #16a34a;
+      --muted2: #64748b;
+      --green: #22c55e;
+      --cyan: #22d3ee;
+      --blue: #3b82f6;
+      --purple: #a855f7;
       --red: #ef4444;
       --yellow: #facc15;
-      --blue: #38bdf8;
-      --purple: #a78bfa;
-      --shadow: 0 22px 80px rgba(0,0,0,.42);
-      --radius-xl: 24px;
-      --radius-lg: 18px;
-      --radius-md: 14px;
-      --max: 1320px;
+      --orange: #fb923c;
+      --shadow: 0 24px 90px rgba(0, 0, 0, .46);
+      --soft: 0 16px 44px rgba(0, 0, 0, .24);
+      --radius: 24px;
+      --radius2: 34px;
+      --max: 1480px;
+      --left: 286px;
+      --right: 400px;
+    }
+
+    [data-theme="light"] {
+      --bg: #eef5f0;
+      --bg2: #f8faf9;
+      --card: rgba(255, 255, 255, .92);
+      --card2: rgba(255, 255, 255, .98);
+      --glass: rgba(7, 18, 11, .06);
+      --glass2: rgba(7, 18, 11, .10);
+      --border: rgba(15, 23, 42, .10);
+      --border2: rgba(15, 23, 42, .18);
+      --text: #07130b;
+      --muted: #526276;
+      --muted2: #7b8797;
+      --shadow: 0 24px 80px rgba(15, 23, 42, .12);
+      --soft: 0 16px 34px rgba(15, 23, 42, .10);
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(34,197,94,.24), transparent 30%),
-        radial-gradient(circle at top right, rgba(56,189,248,.16), transparent 32%),
-        linear-gradient(180deg, #05070c 0%, var(--bg) 42%, #05070c 100%);
-      color: var(--text);
       min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(34, 197, 94, .30), transparent 30%),
+        radial-gradient(circle at 92% 0%, rgba(34, 211, 238, .18), transparent 33%),
+        radial-gradient(circle at 55% 18%, rgba(168, 85, 247, .14), transparent 30%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x: hidden;
+    }
+
+    body:before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: .8;
     }
 
     button, input, select { font: inherit; }
-
+    button { cursor: pointer; }
     a { color: inherit; text-decoration: none; }
-
-    .app-shell {
-      width: min(var(--max), calc(100% - 28px));
-      margin: 0 auto;
-      padding: 18px 0 36px;
-    }
 
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 50;
-      backdrop-filter: blur(18px);
-      background: rgba(7, 11, 18, .78);
+      z-index: 100;
       border-bottom: 1px solid var(--border);
+      background: rgba(5, 8, 20, .76);
+      backdrop-filter: blur(22px);
     }
 
+    [data-theme="light"] .topbar { background: rgba(248, 250, 249, .80); }
+
     .topbar-inner {
-      width: min(var(--max), calc(100% - 28px));
-      margin: 0 auto;
+      width: min(var(--max), calc(100% - 24px));
       min-height: 74px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
+      gap: 14px;
     }
 
     .brand {
@@ -82,1359 +110,944 @@
     }
 
     .logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 15px;
-      background:
-        radial-gradient(circle at 30% 25%, #dcfce7 0 10%, transparent 12%),
-        linear-gradient(135deg, var(--accent), #14b8a6 55%, #2563eb);
+      width: 50px;
+      height: 50px;
+      border-radius: 18px;
       display: grid;
       place-items: center;
-      box-shadow: 0 16px 40px rgba(34,197,94,.26);
       position: relative;
       overflow: hidden;
+      background: conic-gradient(from 180deg, var(--green), var(--cyan), var(--blue), var(--green));
+      box-shadow: 0 18px 48px rgba(34, 197, 94, .28);
     }
 
-    .logo::after {
+    .logo:after {
       content: "";
-      width: 21px;
-      height: 21px;
-      border: 2px solid rgba(255,255,255,.82);
+      width: 26px;
+      height: 26px;
+      border: 2px solid rgba(255, 255, 255, .92);
       border-radius: 999px;
-      box-shadow: inset 0 0 0 4px rgba(255,255,255,.16);
+      box-shadow: inset 0 0 0 5px rgba(255, 255, 255, .18);
     }
 
     .brand-title {
-      line-height: 1.05;
-      font-size: 1.14rem;
-      font-weight: 900;
-      letter-spacing: -.04em;
+      font-weight: 1000;
+      font-size: 1.2rem;
+      line-height: 1;
+      letter-spacing: -.055em;
     }
 
     .brand-subtitle {
       color: var(--muted);
       font-size: .78rem;
-      margin-top: 4px;
-      font-weight: 600;
+      font-weight: 850;
+      margin-top: 5px;
     }
 
-    .desktop-nav {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      padding: 6px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: rgba(255,255,255,.04);
-    }
-
-    .nav-btn,
-    .chip,
-    .icon-btn,
-    .primary-btn,
-    .ghost-btn {
-      border: 0;
-      cursor: pointer;
-      color: var(--text);
-      transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease;
-    }
-
-    .nav-btn {
-      padding: 10px 13px;
-      border-radius: 999px;
-      background: transparent;
-      color: var(--muted);
-      font-weight: 800;
-      font-size: .9rem;
-    }
-
-    .nav-btn:hover,
-    .nav-btn.active {
-      background: rgba(34,197,94,.16);
-      color: #dcfce7;
-    }
-
-    .right-tools {
+    .search {
+      flex: 1;
+      max-width: 560px;
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-
-    .select-wrap {
-      position: relative;
-    }
-
-    .language-select {
-      appearance: none;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      padding: 10px 34px 10px 12px;
+      padding: 12px 14px;
       border-radius: 999px;
-      outline: none;
-      font-weight: 800;
+      background: var(--glass);
+      border: 1px solid var(--border);
     }
 
-    .select-wrap::after {
-      content: "▾";
-      position: absolute;
-      right: 13px;
-      top: 50%;
-      transform: translateY(-52%);
+    .search span { color: var(--muted); font-weight: 1000; }
+    .search input {
+      width: 100%;
+      background: transparent;
+      border: 0;
+      outline: 0;
+      color: var(--text);
+      font-weight: 850;
+    }
+    .search input::placeholder { color: var(--muted2); }
+
+    .top-actions { display: flex; align-items: center; gap: 10px; }
+
+    .select, .icon-btn, .nav-btn, .league-btn, .filter-btn, .primary-btn, .ghost-btn {
+      border: 1px solid var(--border);
+      background: var(--glass);
+      color: var(--text);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .select {
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-weight: 900;
+      outline: 0;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      font-weight: 1000;
+    }
+
+    .primary-btn, .ghost-btn {
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight: 1000;
+    }
+
+    .primary-btn {
+      border: 0;
+      color: #03110a;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      box-shadow: 0 16px 36px rgba(34, 197, 94, .26);
+    }
+
+    .icon-btn:hover, .nav-btn:hover, .league-btn:hover, .filter-btn:hover, .primary-btn:hover, .ghost-btn:hover { transform: translateY(-1px); border-color: var(--border2); }
+
+    .layout {
+      width: min(var(--max), calc(100% - 24px));
+      margin: 0 auto;
+      padding: 16px 0 96px;
+      display: grid;
+      grid-template-columns: var(--left) minmax(0, 1fr) var(--right);
+      gap: 18px;
+    }
+
+    .leftbar, .rightbar {
+      position: sticky;
+      top: 92px;
+      align-self: start;
+      display: grid;
+      gap: 14px;
+    }
+
+    .main { min-width: 0; display: grid; gap: 16px; }
+
+    .panel, .hero, .mini, .match-block, .detail-card {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--card), rgba(14, 22, 40, .72));
+      border-radius: var(--radius);
+      box-shadow: var(--soft);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+    }
+
+    [data-theme="light"] .panel, [data-theme="light"] .hero, [data-theme="light"] .mini, [data-theme="light"] .match-block, [data-theme="light"] .detail-card {
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.76));
+    }
+
+    .panel { padding: 16px; }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .panel-head h2, .panel-head h3 { margin: 0; font-size: 1rem; letter-spacing: -.025em; }
+    .panel-head small, .muted { color: var(--muted); font-size: .78rem; font-weight: 850; }
+
+    .stack { display: grid; gap: 8px; }
+
+    .nav-btn, .league-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 950;
+      text-align: left;
+    }
+
+    .nav-btn.active, .league-btn.active, .filter-btn.active {
+      background: rgba(34, 197, 94, .15);
+      border-color: rgba(34, 197, 94, .35);
+      color: #bbf7d0;
+    }
+
+    [data-theme="light"] .nav-btn.active, [data-theme="light"] .league-btn.active, [data-theme="light"] .filter-btn.active { color: #08622f; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      min-height: 24px;
+      padding: 4px 8px;
+      border-radius: 999px;
       color: var(--muted);
-      pointer-events: none;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      font-size: .74rem;
+      font-weight: 1000;
     }
 
     .hero {
-      margin-top: 26px;
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .hero-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
-      background:
-        linear-gradient(135deg, rgba(34,197,94,.18), rgba(56,189,248,.10) 55%, rgba(167,139,250,.12)),
-        rgba(255,255,255,.05);
-      box-shadow: var(--shadow);
-      padding: 28px;
-      overflow: hidden;
       position: relative;
+      padding: 24px;
+      min-height: 270px;
+      background: radial-gradient(circle at 78% 18%, rgba(34, 197, 94, .26), transparent 28%), radial-gradient(circle at 5% 10%, rgba(34, 211, 238, .16), transparent 28%), linear-gradient(135deg, var(--glass2), rgba(255,255,255,.035));
+      box-shadow: var(--shadow);
     }
 
-    .hero-card::before {
+    .hero:after {
       content: "";
       position: absolute;
-      right: -70px;
-      top: -80px;
-      width: 260px;
-      height: 260px;
+      width: 330px;
+      height: 330px;
+      right: -100px;
+      bottom: -140px;
       border-radius: 999px;
-      background: rgba(34,197,94,.18);
-      filter: blur(2px);
+      background: conic-gradient(from 180deg, rgba(34,197,94,.35), rgba(34,211,238,.18), rgba(168,85,247,.22), rgba(34,197,94,.35));
+      filter: blur(3px);
+      opacity: .8;
     }
+
+    .hero-content { position: relative; z-index: 1; max-width: 780px; }
 
     .eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      color: #bbf7d0;
-      background: rgba(34,197,94,.14);
-      border: 1px solid rgba(34,197,94,.24);
+      gap: 9px;
       padding: 8px 12px;
       border-radius: 999px;
-      font-size: .85rem;
-      font-weight: 900;
+      color: #dcfce7;
+      background: rgba(34, 197, 94, .14);
+      border: 1px solid rgba(34, 197, 94, .28);
+      font-size: .86rem;
+      font-weight: 1000;
       margin-bottom: 16px;
     }
 
+    [data-theme="light"] .eyebrow { color: #08622f; }
+
     .live-dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 999px;
       background: var(--red);
-      box-shadow: 0 0 0 7px rgba(239,68,68,.14);
-      animation: pulse 1.3s infinite;
+      box-shadow: 0 0 0 8px rgba(239, 68, 68, .14);
+      animation: pulse 1.25s infinite;
     }
 
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(.75); opacity: .7; }
+      50% { transform: scale(.72); opacity: .72; }
     }
 
     .hero h1 {
-      font-size: clamp(2.2rem, 5vw, 4.4rem);
-      line-height: .95;
-      letter-spacing: -.07em;
       margin: 0;
-      max-width: 860px;
+      font-size: clamp(2.35rem, 4.8vw, 4.7rem);
+      line-height: .93;
+      letter-spacing: -.078em;
     }
+
+    .gradient {
+      color: transparent;
+      background: linear-gradient(135deg, #dcfce7, var(--green), var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    [data-theme="light"] .gradient { background: linear-gradient(135deg, #047857, #0891b2, #2563eb); -webkit-background-clip: text; background-clip: text; }
 
     .hero p {
-      color: #cbd5e1;
-      max-width: 680px;
-      font-size: 1.05rem;
-      line-height: 1.65;
       margin: 18px 0 0;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .primary-btn,
-    .ghost-btn {
-      border-radius: 999px;
-      padding: 12px 16px;
-      font-weight: 900;
-    }
-
-    .primary-btn {
-      background: linear-gradient(135deg, var(--accent), #14b8a6);
-      color: #02130a;
-      box-shadow: 0 15px 34px rgba(34,197,94,.24);
-    }
-
-    .ghost-btn {
-      background: rgba(255,255,255,.08);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .primary-btn:hover,
-    .ghost-btn:hover,
-    .icon-btn:hover,
-    .chip:hover { transform: translateY(-1px); }
-
-    .hero-side {
-      display: grid;
-      gap: 18px;
-    }
-
-    .stat-card,
-    .panel,
-    .league-card,
-    .match-row,
-    .details-card {
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.055);
-      border-radius: var(--radius-xl);
-      box-shadow: 0 14px 40px rgba(0,0,0,.22);
-    }
-
-    .stat-card {
-      padding: 18px;
-      display: grid;
-      gap: 12px;
-      align-content: center;
-    }
-
-    .clock {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 14px;
-    }
-
-    .clock-time {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 950;
-      letter-spacing: -.06em;
-    }
-
-    .clock-date {
+      max-width: 660px;
       color: var(--muted);
-      font-weight: 800;
-      text-align: right;
-    }
-
-    .mini-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .mini-stat {
-      padding: 12px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--border);
-    }
-
-    .mini-stat b {
-      font-size: 1.45rem;
-      letter-spacing: -.04em;
-    }
-
-    .mini-stat span {
-      display: block;
-      color: var(--muted);
-      font-size: .76rem;
-      font-weight: 800;
-      margin-top: 4px;
-    }
-
-    .main-grid {
-      display: grid;
-      grid-template-columns: 280px minmax(0, 1fr) 360px;
-      gap: 18px;
-      margin-top: 18px;
-      align-items: start;
-    }
-
-    .panel {
-      padding: 16px;
-    }
-
-    .section-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .section-title h2,
-    .section-title h3 {
-      margin: 0;
-      font-size: 1rem;
-      letter-spacing: -.02em;
-    }
-
-    .section-title small {
-      color: var(--muted);
-      font-weight: 800;
-    }
-
-    .search-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      border-radius: 18px;
-      padding: 12px;
-      margin-bottom: 12px;
-    }
-
-    .search-box span { color: var(--muted); }
-
-    .search-box input {
-      width: 100%;
-      border: 0;
-      outline: none;
-      color: var(--text);
-      background: transparent;
+      font-size: 1.04rem;
+      line-height: 1.68;
       font-weight: 700;
     }
 
-    .search-box input::placeholder { color: var(--muted-2); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
 
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .chip {
-      padding: 9px 11px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
+    .ticker {
+      border-radius: var(--radius);
       border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: .86rem;
-      font-weight: 900;
-    }
-
-    .chip.active {
-      background: rgba(34,197,94,.16);
-      border-color: rgba(34,197,94,.36);
-      color: #bbf7d0;
-    }
-
-    .country-list,
-    .news-list,
-    .team-list {
-      display: grid;
-      gap: 8px;
-    }
-
-    .country-btn,
-    .news-item,
-    .team-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 12px;
-      border-radius: 17px;
-      background: rgba(255,255,255,.045);
-      border: 1px solid transparent;
-      color: var(--text);
-    }
-
-    .country-btn {
-      width: 100%;
-      cursor: pointer;
-    }
-
-    .country-btn:hover,
-    .country-btn.active {
-      border-color: rgba(34,197,94,.25);
-      background: rgba(34,197,94,.10);
-    }
-
-    .country-name,
-    .team-name {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      font-weight: 900;
-    }
-
-    .badge {
-      color: var(--muted);
-      font-size: .78rem;
-      font-weight: 900;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-    }
-
-    .league-card {
+      background: var(--glass);
       overflow: hidden;
-      margin-bottom: 14px;
     }
 
-    .league-header {
+    .ticker-track {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      width: max-content;
+      animation: ticker 28s linear infinite;
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.14);
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    [data-theme="light"] .ticker-item { background: rgba(255,255,255,.62); }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .mini { padding: 16px; }
+    .mini strong { display: block; font-size: 1.78rem; line-height: 1; letter-spacing: -.055em; }
+    .mini span { display: block; margin-top: 7px; color: var(--muted); font-size: .8rem; font-weight: 900; }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .filters { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+    .filters::-webkit-scrollbar { display: none; }
+
+    .filter-btn {
+      flex: 0 0 auto;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: .86rem;
+      font-weight: 1000;
+    }
+
+    .date-box {
+      display: flex;
+      gap: 8px;
+      padding: 6px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+    }
+
+    .date-box button {
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 11px;
+      font-weight: 1000;
+    }
+
+    .date-box button.active {
+      color: #03110a;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+    }
+
+    .section { display: none; }
+    .section.active { display: grid; gap: 16px; }
+
+    .match-block { margin-bottom: 14px; }
+
+    .league-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
       padding: 14px 16px;
-      background: linear-gradient(90deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
       border-bottom: 1px solid var(--border);
+      background: linear-gradient(90deg, var(--glass2), transparent);
     }
 
-    .league-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    .league-title strong {
-      display: block;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .league-title span {
-      color: var(--muted);
-      font-size: .78rem;
-      font-weight: 800;
-    }
+    .league-title { display: flex; align-items: center; gap: 11px; min-width: 0; }
+    .league-title b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .league-title small { color: var(--muted); font-weight: 850; }
 
     .match-row {
-      border: 0;
-      border-radius: 0;
-      box-shadow: none;
-      padding: 14px 16px;
       display: grid;
-      grid-template-columns: 84px 1fr 74px 120px 44px;
+      grid-template-columns: 76px minmax(0, 1fr) 120px 100px 42px;
       gap: 12px;
       align-items: center;
-      cursor: pointer;
-      background: transparent;
+      padding: 14px 16px;
       border-bottom: 1px solid var(--border);
+      transition: background .18s ease;
     }
 
     .match-row:last-child { border-bottom: 0; }
+    .match-row:hover, .match-row.selected { background: rgba(34, 197, 94, .085); }
 
-    .match-row:hover,
-    .match-row.selected {
-      background: rgba(34,197,94,.08);
-    }
+    .status { display: grid; gap: 4px; color: var(--muted); font-size: .78rem; font-weight: 1000; }
+    .status.live { color: #fecaca; }
+    .status.upcoming { color: #bfdbfe; }
 
-    .match-status {
-      display: grid;
-      gap: 4px;
-      color: var(--muted);
-      font-size: .78rem;
-      font-weight: 900;
-    }
-
-    .status-live { color: #fecaca; }
-    .status-finished { color: var(--muted); }
-    .status-upcoming { color: #bfdbfe; }
-
-    .teams {
-      min-width: 0;
-      display: grid;
-      gap: 8px;
-    }
-
-    .team-line {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    .team-left {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      min-width: 0;
-      font-weight: 900;
-    }
-
-    .team-left span:last-child {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .teams { display: grid; gap: 8px; min-width: 0; }
+    .team-line { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-width: 0; }
+    .team-name { display: flex; align-items: center; gap: 10px; min-width: 0; font-weight: 1000; }
+    .team-name span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     .crest {
-      width: 26px;
-      height: 26px;
-      border-radius: 9px;
+      width: 30px;
+      height: 30px;
       display: grid;
       place-items: center;
-      background: rgba(255,255,255,.08);
-      border: 1px solid var(--border);
       flex: 0 0 auto;
-      font-size: .8rem;
-    }
-
-    .score {
-      font-size: 1.2rem;
-      font-weight: 950;
-      letter-spacing: -.04em;
-      min-width: 20px;
-      text-align: right;
-    }
-
-    .watch {
-      display: grid;
-      gap: 4px;
-      font-size: .78rem;
-      color: var(--muted);
-      font-weight: 850;
-    }
-
-    .watch strong { color: var(--text); }
-
-    .form {
-      display: flex;
-      gap: 3px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .form-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 6px;
-      display: grid;
-      place-items: center;
-      font-size: .62rem;
-      font-weight: 950;
-      color: #06110b;
-      background: var(--muted-2);
-    }
-
-    .form-dot.w { background: var(--accent); }
-    .form-dot.d { background: var(--yellow); }
-    .form-dot.l { background: var(--red); color: white; }
-
-    .icon-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.06);
+      border-radius: 11px;
       border: 1px solid var(--border);
-      display: grid;
-      place-items: center;
-      color: var(--muted);
-    }
-
-    .icon-btn.active {
-      color: #fde68a;
-      background: rgba(250,204,21,.12);
-      border-color: rgba(250,204,21,.26);
-    }
-
-    .details-card {
-      overflow: hidden;
-      position: sticky;
-      top: 92px;
-    }
-
-    .details-hero {
-      padding: 18px;
-      background:
-        radial-gradient(circle at 70% 10%, rgba(34,197,94,.18), transparent 34%),
-        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.025));
-      border-bottom: 1px solid var(--border);
-    }
-
-    .details-league {
-      color: var(--muted);
-      font-size: .82rem;
-      font-weight: 900;
-      margin-bottom: 15px;
-    }
-
-    .details-scoreboard {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .details-team {
-      display: grid;
-      justify-items: center;
-      text-align: center;
-      gap: 8px;
-      font-weight: 950;
-    }
-
-    .details-team .crest {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
-      font-size: 1.2rem;
-    }
-
-    .big-score {
-      font-size: 2.2rem;
-      font-weight: 950;
-      letter-spacing: -.08em;
-      background: rgba(0,0,0,.22);
-      border: 1px solid var(--border);
-      padding: 10px 14px;
-      border-radius: 18px;
-      min-width: 92px;
-      text-align: center;
-    }
-
-    .details-body {
-      padding: 16px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .info-box {
-      padding: 12px;
-      border-radius: 17px;
-      background: rgba(255,255,255,.055);
-      border: 1px solid var(--border);
-    }
-
-    .info-box span {
-      color: var(--muted);
+      background: var(--glass2);
       font-size: .74rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .04em;
+      font-weight: 1000;
     }
 
-    .info-box strong {
-      display: block;
-      margin-top: 5px;
-      font-size: .94rem;
-    }
+    .score { min-width: 22px; text-align: right; font-weight: 1000; font-size: 1.12rem; }
 
-    .timeline {
-      display: grid;
-      gap: 10px;
-      margin-top: 2px;
-    }
+    .watch { display: grid; gap: 5px; color: var(--muted); font-size: .78rem; font-weight: 900; }
+    .watch b { color: var(--text); }
 
-    .event-line {
-      display: grid;
-      grid-template-columns: 42px 1fr;
-      gap: 10px;
-      align-items: start;
-      color: #cbd5e1;
-      font-size: .9rem;
-      font-weight: 700;
-    }
+    .momentum { display: flex; align-items: center; justify-content: center; gap: 3px; }
+    .dotbar { width: 8px; border-radius: 999px; background: var(--muted2); opacity: .8; }
+    .dotbar.good { background: var(--green); }
+    .dotbar.hot { background: var(--cyan); }
+    .dotbar.bad { background: var(--red); }
 
-    .event-time {
-      color: var(--accent);
-      font-weight: 950;
-    }
+    .star.active { color: #fde047; background: rgba(250, 204, 21, .13); border-color: rgba(250, 204, 21, .30); }
 
-    .bar-row {
-      display: grid;
-      gap: 6px;
-    }
+    .detail-card { position: relative; }
+    .detail-hero { padding: 18px; border-bottom: 1px solid var(--border); background: radial-gradient(circle at 75% 10%, rgba(34,197,94,.22), transparent 35%), linear-gradient(135deg, var(--glass2), transparent); }
+    .detail-league { color: var(--muted); font-size: .82rem; font-weight: 950; margin-bottom: 16px; }
+    .scoreboard { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
+    .detail-team { display: grid; place-items: center; gap: 9px; text-align: center; font-weight: 1000; }
+    .detail-team .crest { width: 54px; height: 54px; border-radius: 18px; font-size: .92rem; }
+    .big-score { min-width: 102px; padding: 11px 14px; border-radius: 20px; background: rgba(0,0,0,.18); border: 1px solid var(--border); text-align: center; font-size: 2.08rem; font-weight: 1000; letter-spacing: -.08em; }
+    [data-theme="light"] .big-score { background: rgba(255,255,255,.58); }
 
-    .bar-top {
-      display: flex;
-      justify-content: space-between;
-      color: var(--muted);
-      font-size: .8rem;
-      font-weight: 850;
-    }
+    .detail-body { padding: 16px; display: grid; gap: 14px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .info-box { min-width: 0; padding: 12px; border-radius: 17px; background: var(--glass); border: 1px solid var(--border); }
+    .info-box span { display: block; color: var(--muted); font-size: .72rem; font-weight: 1000; text-transform: uppercase; letter-spacing: .045em; }
+    .info-box b { display: block; margin-top: 6px; font-size: .92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .bar {
-      height: 8px;
-      background: rgba(255,255,255,.08);
-      border-radius: 999px;
+    .progress-row { display: grid; gap: 7px; }
+    .progress-top { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: .8rem; font-weight: 950; }
+    .progress { height: 9px; background: var(--glass); border-radius: 999px; border: 1px solid var(--border); overflow: hidden; }
+    .progress span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--green), var(--cyan)); }
+
+    .pitch {
+      position: relative;
+      min-height: 320px;
+      border-radius: 22px;
       overflow: hidden;
+      border: 1px solid rgba(255,255,255,.18);
+      background: linear-gradient(90deg, rgba(34,197,94,.16) 50%, rgba(34,197,94,.10) 50%), repeating-linear-gradient(0deg, rgba(34,197,94,.28) 0 36px, rgba(22,163,74,.23) 36px 72px);
     }
 
-    .bar span {
-      display: block;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent), #38bdf8);
+    .pitch:before { content: ""; position: absolute; inset: 16px; border: 2px solid rgba(255,255,255,.34); border-radius: 18px; }
+    .pitch:after { content: ""; position: absolute; left: 50%; top: 16px; bottom: 16px; width: 2px; background: rgba(255,255,255,.34); transform: translateX(-50%); }
+    .player { position: absolute; z-index: 1; width: 34px; height: 34px; border-radius: 999px; display: grid; place-items: center; border: 2px solid rgba(255,255,255,.76); background: #0f172a; color: white; font-size: .7rem; font-weight: 1000; box-shadow: 0 10px 20px rgba(0,0,0,.25); }
+    .player.away { background: #f8fafc; color: #0f172a; }
+
+    .timeline { display: grid; gap: 9px; }
+    .event { display: grid; grid-template-columns: 44px 1fr; gap: 10px; align-items: start; padding: 10px; border-radius: 15px; background: var(--glass); border: 1px solid var(--border); font-size: .88rem; font-weight: 820; }
+    .event-time { color: var(--green); font-weight: 1000; }
+
+    .card-list { display: grid; gap: 10px; }
+    .tv-card, .news-card, .team-card, .ranking-row { padding: 12px; border-radius: 18px; border: 1px solid var(--border); background: var(--glass); }
+    .tv-card { display: grid; grid-template-columns: 54px 1fr auto; gap: 12px; align-items: center; }
+    .channel-logo { width: 54px; height: 42px; border-radius: 15px; display: grid; place-items: center; color: #03110a; background: linear-gradient(135deg, var(--green), var(--cyan)); font-weight: 1000; font-size: .76rem; }
+    .tv-card b, .news-card b, .team-card b { display: block; }
+    .tv-card span, .news-card span, .team-card span { color: var(--muted); font-weight: 850; font-size: .8rem; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .ranking-row { display: grid; grid-template-columns: 30px 1fr 34px 34px 40px; gap: 8px; align-items: center; font-weight: 950; }
+    .ranking-row.header { color: var(--muted); font-size: .76rem; background: transparent; border-color: transparent; }
+    .team-card { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .team-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+
+    .api-box { padding: 16px; border-radius: var(--radius); border: 1px solid rgba(34,197,94,.26); background: linear-gradient(135deg, rgba(34,197,94,.14), rgba(34,211,238,.08)); }
+    .api-box code { display: block; margin-top: 10px; padding: 12px; border-radius: 16px; background: rgba(0,0,0,.24); color: #dcfce7; overflow-x: auto; }
+
+    .toast { position: fixed; right: 16px; bottom: 16px; z-index: 130; max-width: 360px; padding: 14px 16px; border-radius: 20px; background: rgba(15, 23, 42, .94); color: white; border: 1px solid rgba(255,255,255,.16); box-shadow: var(--shadow); transform: translateY(140%); transition: transform .28s ease; font-weight: 850; }
+    .toast.show { transform: translateY(0); }
+
+    .mobile-nav { display: none; position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); z-index: 110; width: min(620px, calc(100% - 18px)); padding: 8px; border-radius: 25px; border: 1px solid var(--border2); background: rgba(6, 10, 24, .86); backdrop-filter: blur(20px); box-shadow: var(--shadow); }
+    [data-theme="light"] .mobile-nav { background: rgba(255,255,255,.88); }
+    .mobile-nav button { flex: 1; border: 0; background: transparent; color: var(--muted); border-radius: 18px; padding: 10px 5px; font-size: .78rem; font-weight: 1000; }
+    .mobile-nav button.active { color: #03110a; background: linear-gradient(135deg, var(--green), var(--cyan)); }
+
+    .empty { padding: 26px; border-radius: var(--radius); border: 1px dashed var(--border2); text-align: center; color: var(--muted); font-weight: 900; background: var(--glass); }
+
+    @media (max-width: 1240px) {
+      .layout { grid-template-columns: var(--left) minmax(0, 1fr); }
+      .rightbar { position: static; grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }
     }
 
-    .news-item {
-      align-items: flex-start;
-      justify-content: flex-start;
-    }
-
-    .news-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: var(--accent);
-      margin-top: 7px;
-      flex: 0 0 auto;
-    }
-
-    .news-item p {
-      margin: 0;
-      font-size: .9rem;
-      line-height: 1.35;
-      font-weight: 800;
-    }
-
-    .news-item small { color: var(--muted); font-weight: 800; }
-
-    .mobile-tabs {
-      display: none;
-      position: fixed;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(520px, calc(100% - 22px));
-      z-index: 80;
-      padding: 8px;
-      border-radius: 24px;
-      background: rgba(9, 14, 24, .86);
-      border: 1px solid var(--border-strong);
-      backdrop-filter: blur(20px);
-      box-shadow: var(--shadow);
-    }
-
-    .mobile-tabs button {
-      flex: 1;
-      border: 0;
-      padding: 10px 6px;
-      border-radius: 17px;
-      background: transparent;
-      color: var(--muted);
-      font-weight: 900;
-    }
-
-    .mobile-tabs button.active {
-      background: rgba(34,197,94,.16);
-      color: #dcfce7;
-    }
-
-    .empty-state {
-      padding: 26px;
-      text-align: center;
-      color: var(--muted);
-      border: 1px dashed var(--border-strong);
-      border-radius: var(--radius-xl);
-      background: rgba(255,255,255,.035);
-      font-weight: 800;
-    }
-
-    footer {
-      color: var(--muted);
-      text-align: center;
-      padding: 24px 0 80px;
-      font-size: .85rem;
-      font-weight: 700;
-    }
-
-    @media (max-width: 1120px) {
-      .hero { grid-template-columns: 1fr; }
-      .main-grid { grid-template-columns: 240px minmax(0, 1fr); }
-      .right-column { grid-column: 1 / -1; }
-      .details-card { position: static; }
-    }
-
-    @media (max-width: 820px) {
-      .desktop-nav { display: none; }
+    @media (max-width: 920px) {
+      .layout { grid-template-columns: 1fr; }
+      .leftbar { display: none; }
+      .rightbar { grid-template-columns: 1fr; }
+      .search { max-width: none; }
       .brand-subtitle { display: none; }
-      .topbar-inner { min-height: 66px; }
-      .main-grid { grid-template-columns: 1fr; }
-      .left-column { display: none; }
-      .hero-card { padding: 22px; }
-      .match-row {
-        grid-template-columns: 62px 1fr 34px;
-        gap: 10px;
-      }
-      .watch, .form { display: none; }
-      .mobile-tabs { display: flex; }
-      .right-tools { gap: 6px; }
-      .language-select { max-width: 92px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .toolbar { grid-template-columns: 1fr; }
+      .match-row { grid-template-columns: 68px minmax(0, 1fr) 42px; }
+      .watch, .momentum { display: none; }
+      .mobile-nav { display: flex; }
     }
 
-    @media (max-width: 520px) {
-      .app-shell { width: min(100% - 18px, var(--max)); }
-      .topbar-inner { width: min(100% - 18px, var(--max)); }
-      .hero h1 { font-size: 2.3rem; }
+    @media (max-width: 620px) {
+      .topbar-inner, .layout { width: min(100% - 16px, var(--max)); }
+      .top-actions .icon-btn:nth-child(2) { display: none; }
+      .select { max-width: 78px; }
+      .hero { padding: 19px; border-radius: 24px; }
+      .hero h1 { font-size: 2.38rem; }
       .hero p { font-size: .94rem; }
-      .mini-stats { grid-template-columns: 1fr; }
-      .info-grid { grid-template-columns: 1fr; }
-      .details-scoreboard { gap: 8px; }
-      .big-score { font-size: 1.65rem; min-width: 74px; padding: 9px; }
-      .details-team .crest { width: 40px; height: 40px; }
-      .details-team { font-size: .84rem; }
+      .stats-grid, .grid-2, .info-grid { grid-template-columns: 1fr; }
+      .scoreboard { gap: 7px; }
+      .big-score { min-width: 78px; font-size: 1.55rem; padding: 9px; }
+      .detail-team .crest { width: 44px; height: 44px; }
+      .detail-team { font-size: .78rem; }
+      .tv-card { grid-template-columns: 48px 1fr; }
+      .tv-card .badge { grid-column: 1 / -1; width: max-content; }
     }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <a href="#" class="brand" aria-label="FootLive Pro">
-        <div class="logo" aria-hidden="true"></div>
+      <a class="brand" href="#" aria-label="FootNova Ultimate">
+        <div class="logo"></div>
         <div>
-          <div class="brand-title">FootLive Pro</div>
-          <div class="brand-subtitle" data-i18n="brandSubtitle">Scores, TV & compétitions</div>
+          <div class="brand-title">FootNova Ultimate</div>
+          <div class="brand-subtitle" data-i18n="brandSubtitle">Score, TV, Stats, Classements</div>
         </div>
       </a>
-
-      <nav class="desktop-nav" aria-label="Navigation principale">
-        <button class="nav-btn active" data-view="all" data-i18n="navAll">Tous</button>
-        <button class="nav-btn" data-view="live" data-i18n="navLive">Live</button>
-        <button class="nav-btn" data-view="favorites" data-i18n="navFavorites">Favoris</button>
-        <button class="nav-btn" data-view="tv" data-i18n="navTv">TV</button>
-      </nav>
-
-      <div class="right-tools">
-        <div class="select-wrap">
-          <select class="language-select" id="languageSelect" aria-label="Langue">
-            <option value="fr">FR</option>
-            <option value="en">EN</option>
-            <option value="es">ES</option>
-            <option value="ar">AR</option>
-          </select>
-        </div>
-        <button class="icon-btn" id="themeToggle" title="Changer le thème">◐</button>
+      <label class="search">
+        <span>⌕</span>
+        <input id="searchInput" type="search" data-i18n-placeholder="search" placeholder="Rechercher équipe, match, ligue, chaîne..." />
+      </label>
+      <div class="top-actions">
+        <select id="languageSelect" class="select" aria-label="Langue">
+          <option value="fr">FR</option>
+          <option value="en">EN</option>
+          <option value="es">ES</option>
+          <option value="ar">AR</option>
+          <option value="pt">PT</option>
+        </select>
+        <button class="icon-btn" id="notifyBtn" title="Notifications">🔔</button>
+        <button class="icon-btn" id="themeBtn" title="Thème">◐</button>
       </div>
     </div>
   </header>
 
-  <main class="app-shell">
-    <section class="hero">
-      <div class="hero-card">
-        <div class="eyebrow"><span class="live-dot"></span><span data-i18n="heroEyebrow">Centre de matchs en direct</span></div>
-        <h1 data-i18n="heroTitle">Scores foot, chaînes TV et infos de match au même endroit.</h1>
-        <p data-i18n="heroText">Suis les compétitions, l’heure exacte, les compositions, les stats et les chaînes où regarder les matchs. Interface rapide, moderne et responsive.</p>
-        <div class="hero-actions">
-          <button class="primary-btn" onclick="document.querySelector('#matches').scrollIntoView({behavior:'smooth'})" data-i18n="heroCta">Voir les matchs</button>
-          <button class="ghost-btn" onclick="setFilter('tv')" data-i18n="heroTv">Matchs diffusés TV</button>
-        </div>
-      </div>
+  <div class="layout">
+    <aside class="leftbar">
+      <section class="panel">
+        <div class="panel-head"><h3 data-i18n="menu">Menu</h3><small id="clock">--:--</small></div>
+        <nav class="stack" id="desktopNav"></nav>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h3 data-i18n="competitions">Compétitions</h3><small id="leagueTotal">0</small></div>
+        <div class="stack" id="leagueList"></div>
+      </section>
+      <section class="panel api-box">
+        <h3 style="margin:0 0 8px" data-i18n="apiTitle">Mode vrai direct</h3>
+        <div class="muted" data-i18n="apiText">Les données sont en démo. Pour du vrai direct, connecte une API football.</div>
+        <code>API possible : API-Football, SportMonks, football-data.org</code>
+      </section>
+    </aside>
 
-      <aside class="hero-side">
-        <div class="stat-card">
-          <div class="clock">
-            <div>
-              <div class="clock-time" id="clockTime">--:--</div>
-              <div class="brand-subtitle" data-i18n="localTime">Heure locale</div>
-            </div>
-            <div class="clock-date" id="clockDate">--</div>
-          </div>
-          <div class="mini-stats">
-            <div class="mini-stat"><b id="liveCount">0</b><span data-i18n="liveNow">Live</span></div>
-            <div class="mini-stat"><b id="todayCount">0</b><span data-i18n="today">Aujourd’hui</span></div>
-            <div class="mini-stat"><b id="tvCount">0</b><span data-i18n="onTv">À la TV</span></div>
+    <main class="main">
+      <section class="hero">
+        <div class="hero-content">
+          <div class="eyebrow"><span class="live-dot"></span><span data-i18n="heroEyebrow">Live intelligent, rapide et premium</span></div>
+          <h1><span data-i18n="heroA">Toute la planète foot.</span><br><span class="gradient" data-i18n="heroB">Une seule app.</span></h1>
+          <p data-i18n="heroText">Scores en direct, chaînes TV, où regarder, statistiques, compositions, événements, calendrier, classements, favoris et centre de match ultra complet.</p>
+          <div class="hero-actions">
+            <button class="primary-btn" onclick="setPage('matches')" data-i18n="seeMatches">Voir les matchs</button>
+            <button class="ghost-btn" onclick="setPage('tv')" data-i18n="tvGuide">Guide TV</button>
+            <button class="ghost-btn" onclick="setFilter('live')" data-i18n="liveOnly">Live seulement</button>
           </div>
         </div>
-        <div class="panel">
-          <div class="section-title"><h3 data-i18n="topTeams">Équipes suivies</h3><small data-i18n="edit">Modifier</small></div>
-          <div class="team-list" id="topTeams"></div>
-        </div>
-      </aside>
-    </section>
-
-    <section class="main-grid" id="matches">
-      <aside class="left-column panel">
-        <div class="section-title">
-          <h2 data-i18n="competitions">Compétitions</h2>
-          <small id="competitionCount">0</small>
-        </div>
-        <div class="country-list" id="countryList"></div>
-      </aside>
-
-      <section class="center-column">
-        <div class="panel" style="margin-bottom:14px;">
-          <div class="section-title">
-            <h2 data-i18n="matchesTitle">Matchs</h2>
-            <small id="matchCountLabel">0 match</small>
-          </div>
-          <label class="search-box">
-            <span>⌕</span>
-            <input id="searchInput" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Rechercher équipe, ligue, pays..." />
-          </label>
-          <div class="chips" id="filterChips">
-            <button class="chip active" data-filter="all" data-i18n="filterAll">Tous</button>
-            <button class="chip" data-filter="live" data-i18n="filterLive">Live</button>
-            <button class="chip" data-filter="upcoming" data-i18n="filterUpcoming">À venir</button>
-            <button class="chip" data-filter="finished" data-i18n="filterFinished">Terminés</button>
-            <button class="chip" data-filter="tv" data-i18n="filterTv">Chaîne TV</button>
-            <button class="chip" data-filter="favorites" data-i18n="filterFavorites">Favoris</button>
-          </div>
-        </div>
-        <div id="matchesContainer"></div>
       </section>
 
-      <aside class="right-column">
-        <div class="details-card" id="detailsCard"></div>
-        <div class="panel" style="margin-top:14px;">
-          <div class="section-title"><h3 data-i18n="newsTitle">Actus rapides</h3><small data-i18n="demo">Démo</small></div>
-          <div class="news-list" id="newsList"></div>
+      <section class="ticker"><div class="ticker-track" id="tickerTrack"></div></section>
+
+      <section class="stats-grid">
+        <div class="mini"><strong id="statLive">0</strong><span data-i18n="statLive">Matchs live</span></div>
+        <div class="mini"><strong id="statToday">0</strong><span data-i18n="statToday">Matchs aujourd’hui</span></div>
+        <div class="mini"><strong id="statTv">0</strong><span data-i18n="statTv">Diffusés TV</span></div>
+        <div class="mini"><strong id="statFav">0</strong><span data-i18n="statFav">Favoris</span></div>
+      </section>
+
+      <section class="panel toolbar">
+        <div class="filters" id="filterBar"></div>
+        <div class="date-box" id="dateBox">
+          <button data-date="yesterday" data-i18n="yesterday">Hier</button>
+          <button class="active" data-date="today" data-i18n="today">Aujourd’hui</button>
+          <button data-date="tomorrow" data-i18n="tomorrow">Demain</button>
         </div>
-      </aside>
-    </section>
+      </section>
 
-    <footer>
-      <span data-i18n="footerText">Projet front-end prêt pour GitHub Pages. Les données affichées sont des exemples : connecte une API football pour les vrais scores.</span>
-    </footer>
-  </main>
+      <section class="section active" id="section-matches"><div id="matchesContainer"></div></section>
+      <section class="section" id="section-tv"><div class="panel"><div class="panel-head"><h2 data-i18n="tvGuide">Guide TV</h2><small data-i18n="channels">Chaînes</small></div><div class="card-list" id="tvList"></div></div></section>
+      <section class="section" id="section-rankings"><div class="grid-2" id="rankingGrid"></div></section>
+      <section class="section" id="section-teams"><div class="panel"><div class="panel-head"><h2 data-i18n="teams">Équipes</h2><small data-i18n="favorites">Favoris</small></div><div class="grid-2" id="teamsGrid"></div></div></section>
+      <section class="section" id="section-news"><div class="panel"><div class="panel-head"><h2 data-i18n="news">Actualités</h2><small>Live</small></div><div class="card-list" id="newsList"></div></div></section>
+      <section class="section" id="section-settings"><div class="panel"><div class="panel-head"><h2 data-i18n="settings">Réglages</h2><small>LocalStorage</small></div><div class="grid-2"><div class="api-box"><h3 data-i18n="settingsTitle">Options incluses</h3><p class="muted" data-i18n="settingsText">Langues, thème, favoris, recherche, filtre live, guide TV, classement et détails match.</p></div><div class="api-box"><h3 data-i18n="githubTitle">Compatible GitHub</h3><p class="muted" data-i18n="githubText">Copie ce fichier en index.html, pousse-le sur GitHub, puis active GitHub Pages.</p></div></div></div></section>
+    </main>
 
-  <nav class="mobile-tabs" aria-label="Navigation mobile">
-    <button class="active" data-view="all" data-i18n="navAll">Tous</button>
-    <button data-view="live" data-i18n="navLive">Live</button>
-    <button data-view="favorites" data-i18n="navFavorites">Favoris</button>
-    <button data-view="tv" data-i18n="navTv">TV</button>
-  </nav>
+    <aside class="rightbar">
+      <section class="detail-card" id="detailCard"></section>
+      <section class="panel">
+        <div class="panel-head"><h3 data-i18n="hotTeams">Clubs chauds</h3><small>Forme</small></div>
+        <div class="stack" id="hotTeams"></div>
+      </section>
+    </aside>
+  </div>
+
+  <nav class="mobile-nav" id="mobileNav"></nav>
+  <div class="toast" id="toast"></div>
 
   <script>
-    const translations = {
-      fr: {
-        brandSubtitle: "Scores, TV & compétitions",
-        navAll: "Tous", navLive: "Live", navFavorites: "Favoris", navTv: "TV",
-        heroEyebrow: "Centre de matchs en direct",
-        heroTitle: "Scores foot, chaînes TV et infos de match au même endroit.",
-        heroText: "Suis les compétitions, l’heure exacte, les compositions, les stats et les chaînes où regarder les matchs. Interface rapide, moderne et responsive.",
-        heroCta: "Voir les matchs", heroTv: "Matchs diffusés TV",
-        localTime: "Heure locale", liveNow: "Live", today: "Aujourd’hui", onTv: "À la TV",
-        topTeams: "Équipes suivies", edit: "Modifier", competitions: "Compétitions", matchesTitle: "Matchs",
-        searchPlaceholder: "Rechercher équipe, ligue, pays...",
-        filterAll: "Tous", filterLive: "Live", filterUpcoming: "À venir", filterFinished: "Terminés", filterTv: "Chaîne TV", filterFavorites: "Favoris",
-        newsTitle: "Actus rapides", demo: "Démo",
-        footerText: "Projet front-end prêt pour GitHub Pages. Les données affichées sont des exemples : connecte une API football pour les vrais scores.",
-        details: "Détails", time: "Heure", channel: "Chaîne", where: "Où voir", stadium: "Stade", referee: "Arbitre", stats: "Stats", events: "Évènements", noMatch: "Aucun match trouvé avec ces filtres.",
-        possession: "Possession", shots: "Tirs", xg: "xG", match: "match", matches: "matchs", free: "Gratuit", subscription: "Abonnement", preview: "Avant-match", ht: "Mi-temps", ft: "Terminé"
-      },
-      en: {
-        brandSubtitle: "Scores, TV & competitions",
-        navAll: "All", navLive: "Live", navFavorites: "Favorites", navTv: "TV",
-        heroEyebrow: "Live match center",
-        heroTitle: "Football scores, TV channels and match info in one place.",
-        heroText: "Follow competitions, exact kick-off time, lineups, stats and channels to watch matches. Fast, modern and responsive interface.",
-        heroCta: "View matches", heroTv: "TV matches",
-        localTime: "Local time", liveNow: "Live", today: "Today", onTv: "On TV",
-        topTeams: "Followed teams", edit: "Edit", competitions: "Competitions", matchesTitle: "Matches",
-        searchPlaceholder: "Search team, league, country...",
-        filterAll: "All", filterLive: "Live", filterUpcoming: "Upcoming", filterFinished: "Finished", filterTv: "TV channel", filterFavorites: "Favorites",
-        newsTitle: "Quick news", demo: "Demo",
-        footerText: "Front-end project ready for GitHub Pages. Displayed data is sample data: connect a football API for real scores.",
-        details: "Details", time: "Time", channel: "Channel", where: "Where to watch", stadium: "Stadium", referee: "Referee", stats: "Stats", events: "Events", noMatch: "No matches found with these filters.",
-        possession: "Possession", shots: "Shots", xg: "xG", match: "match", matches: "matches", free: "Free", subscription: "Subscription", preview: "Preview", ht: "Half-time", ft: "Finished"
-      },
-      es: {
-        brandSubtitle: "Resultados, TV y competiciones",
-        navAll: "Todos", navLive: "Directo", navFavorites: "Favoritos", navTv: "TV",
-        heroEyebrow: "Centro de partidos en directo",
-        heroTitle: "Resultados de fútbol, canales TV e información del partido en un solo sitio.",
-        heroText: "Sigue competiciones, hora exacta, alineaciones, estadísticas y canales para ver los partidos. Interfaz rápida, moderna y responsive.",
-        heroCta: "Ver partidos", heroTv: "Partidos en TV",
-        localTime: "Hora local", liveNow: "Directo", today: "Hoy", onTv: "En TV",
-        topTeams: "Equipos seguidos", edit: "Editar", competitions: "Competiciones", matchesTitle: "Partidos",
-        searchPlaceholder: "Buscar equipo, liga, país...",
-        filterAll: "Todos", filterLive: "Directo", filterUpcoming: "Próximos", filterFinished: "Finalizados", filterTv: "Canal TV", filterFavorites: "Favoritos",
-        newsTitle: "Noticias rápidas", demo: "Demo",
-        footerText: "Proyecto front-end listo para GitHub Pages. Los datos son ejemplos: conecta una API de fútbol para resultados reales.",
-        details: "Detalles", time: "Hora", channel: "Canal", where: "Dónde ver", stadium: "Estadio", referee: "Árbitro", stats: "Estadísticas", events: "Eventos", noMatch: "No hay partidos con estos filtros.",
-        possession: "Posesión", shots: "Tiros", xg: "xG", match: "partido", matches: "partidos", free: "Gratis", subscription: "Suscripción", preview: "Previa", ht: "Descanso", ft: "Finalizado"
-      },
-      ar: {
-        brandSubtitle: "نتائج، قنوات وبطولات",
-        navAll: "الكل", navLive: "مباشر", navFavorites: "المفضلة", navTv: "التلفاز",
-        heroEyebrow: "مركز المباريات المباشرة",
-        heroTitle: "نتائج كرة القدم، القنوات ومعلومات المباراة في مكان واحد.",
-        heroText: "تابع البطولات، وقت المباراة، التشكيلات، الإحصائيات والقنوات الناقلة. واجهة سريعة وحديثة ومتجاوبة.",
-        heroCta: "عرض المباريات", heroTv: "مباريات منقولة",
-        localTime: "الوقت المحلي", liveNow: "مباشر", today: "اليوم", onTv: "على التلفاز",
-        topTeams: "فرق تتابعها", edit: "تعديل", competitions: "البطولات", matchesTitle: "المباريات",
-        searchPlaceholder: "ابحث عن فريق، دوري، بلد...",
-        filterAll: "الكل", filterLive: "مباشر", filterUpcoming: "قادمة", filterFinished: "انتهت", filterTv: "قناة TV", filterFavorites: "المفضلة",
-        newsTitle: "أخبار سريعة", demo: "تجربة",
-        footerText: "مشروع واجهة جاهز لـ GitHub Pages. البيانات المعروضة أمثلة: اربط API كرة قدم للنتائج الحقيقية.",
-        details: "تفاصيل", time: "الوقت", channel: "القناة", where: "أين تشاهد", stadium: "الملعب", referee: "الحكم", stats: "إحصائيات", events: "الأحداث", noMatch: "لا توجد مباريات بهذه الفلاتر.",
-        possession: "الاستحواذ", shots: "تسديدات", xg: "xG", match: "مباراة", matches: "مباريات", free: "مجاني", subscription: "اشتراك", preview: "قبل المباراة", ht: "نهاية الشوط", ft: "انتهت"
-      }
+    const I18N = {
+      fr: { brandSubtitle: "Score, TV, Stats, Classements", search: "Rechercher équipe, match, ligue, chaîne...", menu: "Menu", competitions: "Compétitions", apiTitle: "Mode vrai direct", apiText: "Les données sont en démo. Pour du vrai direct, connecte une API football.", heroEyebrow: "Live intelligent, rapide et premium", heroA: "Toute la planète foot.", heroB: "Une seule app.", heroText: "Scores en direct, chaînes TV, où regarder, statistiques, compositions, événements, calendrier, classements, favoris et centre de match ultra complet.", seeMatches: "Voir les matchs", tvGuide: "Guide TV", liveOnly: "Live seulement", statLive: "Matchs live", statToday: "Matchs aujourd’hui", statTv: "Diffusés TV", statFav: "Favoris", yesterday: "Hier", today: "Aujourd’hui", tomorrow: "Demain", matches: "Matchs", rankings: "Classements", teams: "Équipes", news: "Actualités", settings: "Réglages", favorites: "Favoris", all: "Tous", live: "Live", upcoming: "À venir", finished: "Terminés", tv: "TV", free: "Gratuit", subscription: "Abonnement", details: "Détails", time: "Heure", channel: "Chaîne", where: "Où voir", stadium: "Stade", referee: "Arbitre", stats: "Stats", timeline: "Timeline", lineup: "Composition", possession: "Possession", shots: "Tirs", xg: "xG", attacks: "Attaques", noResults: "Aucun résultat avec ces filtres.", channels: "Chaînes", hotTeams: "Clubs chauds", settingsTitle: "Options incluses", settingsText: "Langues, thème, favoris, recherche, filtre live, guide TV, classement et détails match.", githubTitle: "Compatible GitHub", githubText: "Copie ce fichier en index.html, pousse-le sur GitHub, puis active GitHub Pages.", notifOn: "Notifications activées.", alert: "Simulation live : nouvelle action importante." },
+      en: { brandSubtitle: "Scores, TV, Stats, Standings", search: "Search team, match, league, channel...", menu: "Menu", competitions: "Competitions", apiTitle: "Real live mode", apiText: "Demo data. Connect a football API for real live scores.", heroEyebrow: "Smart, fast and premium live", heroA: "The whole football world.", heroB: "One single app.", heroText: "Live scores, TV channels, where to watch, stats, lineups, events, calendar, standings, favorites and a complete match center.", seeMatches: "View matches", tvGuide: "TV Guide", liveOnly: "Live only", statLive: "Live matches", statToday: "Today matches", statTv: "On TV", statFav: "Favorites", yesterday: "Yesterday", today: "Today", tomorrow: "Tomorrow", matches: "Matches", rankings: "Standings", teams: "Teams", news: "News", settings: "Settings", favorites: "Favorites", all: "All", live: "Live", upcoming: "Upcoming", finished: "Finished", tv: "TV", free: "Free", subscription: "Subscription", details: "Details", time: "Time", channel: "Channel", where: "Where to watch", stadium: "Stadium", referee: "Referee", stats: "Stats", timeline: "Timeline", lineup: "Lineup", possession: "Possession", shots: "Shots", xg: "xG", attacks: "Attacks", noResults: "No results with these filters.", channels: "Channels", hotTeams: "Hot teams", settingsTitle: "Included options", settingsText: "Languages, theme, favorites, search, live filter, TV guide, standings and match details.", githubTitle: "GitHub compatible", githubText: "Copy this file as index.html, push it to GitHub, then enable GitHub Pages.", notifOn: "Notifications enabled.", alert: "Live simulation: new important action." },
+      es: { brandSubtitle: "Resultados, TV, Stats", search: "Buscar equipo, partido, liga, canal...", menu: "Menú", competitions: "Competiciones", apiTitle: "Modo directo real", apiText: "Datos demo. Conecta una API de fútbol para resultados reales.", heroEyebrow: "Directo inteligente y premium", heroA: "Todo el mundo del fútbol.", heroB: "Una sola app.", heroText: "Resultados en vivo, TV, dónde ver, estadísticas, alineaciones, eventos, calendario, tablas y favoritos.", seeMatches: "Ver partidos", tvGuide: "Guía TV", liveOnly: "Solo directo", statLive: "En directo", statToday: "Partidos hoy", statTv: "En TV", statFav: "Favoritos", yesterday: "Ayer", today: "Hoy", tomorrow: "Mañana", matches: "Partidos", rankings: "Clasificación", teams: "Equipos", news: "Noticias", settings: "Ajustes", favorites: "Favoritos", all: "Todos", live: "Directo", upcoming: "Próximos", finished: "Finalizados", tv: "TV", free: "Gratis", subscription: "Suscripción", details: "Detalles", time: "Hora", channel: "Canal", where: "Dónde ver", stadium: "Estadio", referee: "Árbitro", stats: "Stats", timeline: "Timeline", lineup: "Alineación", possession: "Posesión", shots: "Tiros", xg: "xG", attacks: "Ataques", noResults: "Sin resultados con estos filtros.", channels: "Canales", hotTeams: "Equipos fuertes", settingsTitle: "Opciones incluidas", settingsText: "Idiomas, tema, favoritos, búsqueda, filtros, TV y clasificación.", githubTitle: "Compatible GitHub", githubText: "Copia como index.html, súbelo a GitHub y activa GitHub Pages.", notifOn: "Notificaciones activadas.", alert: "Simulación live: nueva acción importante." },
+      ar: { brandSubtitle: "نتائج، قنوات، إحصائيات", search: "ابحث عن فريق، مباراة، دوري، قناة...", menu: "القائمة", competitions: "البطولات", apiTitle: "وضع مباشر حقيقي", apiText: "البيانات تجريبية. اربط API لكرة القدم لنتائج حقيقية.", heroEyebrow: "مباشر ذكي وسريع", heroA: "كل عالم كرة القدم.", heroB: "في تطبيق واحد.", heroText: "نتائج مباشرة، قنوات، أين تشاهد، إحصائيات، تشكيلات، أحداث، ترتيب ومفضلة.", seeMatches: "عرض المباريات", tvGuide: "دليل TV", liveOnly: "مباشر فقط", statLive: "مباشر", statToday: "مباريات اليوم", statTv: "على TV", statFav: "المفضلة", yesterday: "أمس", today: "اليوم", tomorrow: "غدا", matches: "المباريات", rankings: "الترتيب", teams: "الفرق", news: "الأخبار", settings: "الإعدادات", favorites: "المفضلة", all: "الكل", live: "مباشر", upcoming: "قادمة", finished: "انتهت", tv: "TV", free: "مجاني", subscription: "اشتراك", details: "تفاصيل", time: "الوقت", channel: "القناة", where: "أين تشاهد", stadium: "الملعب", referee: "الحكم", stats: "إحصائيات", timeline: "الأحداث", lineup: "التشكيلة", possession: "استحواذ", shots: "تسديدات", xg: "xG", attacks: "هجمات", noResults: "لا توجد نتائج.", channels: "القنوات", hotTeams: "فرق قوية", settingsTitle: "الخيارات", settingsText: "لغات، مظهر، مفضلة، بحث، TV وترتيب.", githubTitle: "متوافق GitHub", githubText: "انسخ الملف باسم index.html وارفعه على GitHub Pages.", notifOn: "تم تفعيل الإشعارات.", alert: "محاكاة مباشرة: حدث مهم جديد." },
+      pt: { brandSubtitle: "Resultados, TV, Stats", search: "Buscar equipe, jogo, liga, canal...", menu: "Menu", competitions: "Competições", apiTitle: "Modo ao vivo real", apiText: "Dados demo. Conecte uma API de futebol para placares reais.", heroEyebrow: "Ao vivo inteligente", heroA: "Todo o futebol.", heroB: "Um só app.", heroText: "Placar ao vivo, TV, onde assistir, estatísticas, escalações, eventos, tabela e favoritos.", seeMatches: "Ver jogos", tvGuide: "Guia TV", liveOnly: "Só ao vivo", statLive: "Ao vivo", statToday: "Jogos hoje", statTv: "Na TV", statFav: "Favoritos", yesterday: "Ontem", today: "Hoje", tomorrow: "Amanhã", matches: "Jogos", rankings: "Tabela", teams: "Equipes", news: "Notícias", settings: "Configurações", favorites: "Favoritos", all: "Todos", live: "Ao vivo", upcoming: "Próximos", finished: "Finalizados", tv: "TV", free: "Grátis", subscription: "Assinatura", details: "Detalhes", time: "Hora", channel: "Canal", where: "Onde ver", stadium: "Estádio", referee: "Árbitro", stats: "Stats", timeline: "Timeline", lineup: "Escalação", possession: "Posse", shots: "Chutes", xg: "xG", attacks: "Ataques", noResults: "Sem resultados.", channels: "Canais", hotTeams: "Times em alta", settingsTitle: "Opções incluídas", settingsText: "Idiomas, tema, favoritos, busca, TV e tabela.", githubTitle: "Compatível GitHub", githubText: "Copie como index.html, envie ao GitHub e ative GitHub Pages.", notifOn: "Notificações ativadas.", alert: "Simulação ao vivo: nova ação importante." }
     };
 
-    const matches = [
-      {
-        id: 1, country: "France", flag: "🇫🇷", league: "Ligue 1", round: "Journée 32", status: "live", minute: "67'", time: "20:45", tv: "Canal+ Foot", watch: "myCANAL", access: "subscription",
-        home: "Paris SG", away: "Lyon", hIcon: "PSG", aIcon: "OL", hScore: 2, aScore: 1, favorite: true,
-        stadium: "Parc des Princes", referee: "Clément Turpin", formH: ["w","w","d"], formA: ["l","w","d"],
-        stats: { possession: 58, shotsH: 13, shotsA: 8, xgH: 1.8, xgA: 0.9 },
-        events: ["12' But Paris SG", "38' Carton jaune Lyon", "51' But Lyon", "63' But Paris SG"]
-      },
-      {
-        id: 2, country: "England", flag: "🏴", league: "Premier League", round: "Matchday 35", status: "upcoming", minute: "", time: "21:00", tv: "Sky Sports", watch: "Sky Go / NOW", access: "subscription",
-        home: "Manchester City", away: "Arsenal", hIcon: "MCI", aIcon: "ARS", hScore: null, aScore: null, favorite: true,
-        stadium: "Etihad Stadium", referee: "Michael Oliver", formH: ["w","w","w"], formA: ["w","d","w"],
-        stats: { possession: 0, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0 },
-        events: ["Avant-match : compositions attendues 1h avant le coup d’envoi"]
-      },
-      {
-        id: 3, country: "Spain", flag: "🇪🇸", league: "LaLiga", round: "Jornada 34", status: "finished", minute: "FT", time: "18:30", tv: "beIN SPORTS", watch: "beIN Connect", access: "subscription",
-        home: "Real Madrid", away: "Valencia", hIcon: "RMA", aIcon: "VAL", hScore: 3, aScore: 0, favorite: false,
-        stadium: "Santiago Bernabéu", referee: "Mateu Lahoz", formH: ["w","w","d"], formA: ["l","l","w"],
-        stats: { possession: 63, shotsH: 18, shotsA: 5, xgH: 2.4, xgA: 0.4 },
-        events: ["24' But Real Madrid", "44' But Real Madrid", "72' But Real Madrid"]
-      },
-      {
-        id: 4, country: "Germany", flag: "🇩🇪", league: "Bundesliga", round: "Spieltag 31", status: "live", minute: "HT", time: "19:30", tv: "DAZN", watch: "DAZN App", access: "subscription",
-        home: "Bayern Munich", away: "Dortmund", hIcon: "FCB", aIcon: "BVB", hScore: 1, aScore: 1, favorite: false,
-        stadium: "Allianz Arena", referee: "Daniel Siebert", formH: ["w","d","w"], formA: ["w","w","l"],
-        stats: { possession: 54, shotsH: 9, shotsA: 7, xgH: 1.1, xgA: 1.0 },
-        events: ["9' But Dortmund", "27' But Bayern", "45+2' Mi-temps"]
-      },
-      {
-        id: 5, country: "Italy", flag: "🇮🇹", league: "Serie A", round: "Giornata 33", status: "upcoming", minute: "", time: "20:45", tv: "DAZN", watch: "DAZN App", access: "subscription",
-        home: "Inter", away: "Juventus", hIcon: "INT", aIcon: "JUV", hScore: null, aScore: null, favorite: true,
-        stadium: "San Siro", referee: "Daniele Orsato", formH: ["w","w","w"], formA: ["d","w","l"],
-        stats: { possession: 0, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0 },
-        events: ["Avant-match : duel pour le haut du classement"]
-      },
-      {
-        id: 6, country: "Europe", flag: "🇪🇺", league: "Champions League", round: "Demi-finale", status: "upcoming", minute: "", time: "21:00", tv: "Canal+ / RMC Sport", watch: "myCANAL / RMC Sport", access: "subscription",
-        home: "Barcelona", away: "Liverpool", hIcon: "BAR", aIcon: "LIV", hScore: null, aScore: null, favorite: false,
-        stadium: "Estadi Olímpic", referee: "Szymon Marciniak", formH: ["w","d","w"], formA: ["w","w","w"],
-        stats: { possession: 0, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0 },
-        events: ["Avant-match : diffusion disponible selon pays"]
-      },
-      {
-        id: 7, country: "France", flag: "🇫🇷", league: "Ligue 2", round: "Journée 35", status: "finished", minute: "FT", time: "17:00", tv: "beIN SPORTS", watch: "beIN Connect", access: "subscription",
-        home: "Saint-Étienne", away: "Bordeaux", hIcon: "ASSE", aIcon: "FCGB", hScore: 1, aScore: 1, favorite: false,
-        stadium: "Geoffroy-Guichard", referee: "Bastien Dechepy", formH: ["d","w","w"], formA: ["d","l","d"],
-        stats: { possession: 49, shotsH: 11, shotsA: 10, xgH: 1.2, xgA: 1.1 },
-        events: ["31' But Bordeaux", "76' But Saint-Étienne"]
-      },
-      {
-        id: 8, country: "World", flag: "🌍", league: "Amical international", round: "Friendly", status: "upcoming", minute: "", time: "19:00", tv: "YouTube", watch: "Chaîne officielle", access: "free",
-        home: "Maroc", away: "Sénégal", hIcon: "MAR", aIcon: "SEN", hScore: null, aScore: null, favorite: false,
-        stadium: "Stade Mohammed V", referee: "À confirmer", formH: ["w","d","w"], formA: ["w","l","w"],
-        stats: { possession: 0, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0 },
-        events: ["Avant-match : lien officiel à confirmer"]
-      }
+    const NAV = [
+      { id: "matches", icon: "⚽", key: "matches" },
+      { id: "tv", icon: "📺", key: "tvGuide" },
+      { id: "rankings", icon: "🏆", key: "rankings" },
+      { id: "teams", icon: "⭐", key: "teams" },
+      { id: "news", icon: "📰", key: "news" },
+      { id: "settings", icon: "⚙️", key: "settings" }
     ];
 
+    const FILTERS = [
+      { id: "all", key: "all" },
+      { id: "live", key: "live" },
+      { id: "upcoming", key: "upcoming" },
+      { id: "finished", key: "finished" },
+      { id: "tv", key: "tv" },
+      { id: "favorites", key: "favorites" }
+    ];
+
+    const matches = [
+      { id: 1, date: "today", country: "France", flag: "🇫🇷", league: "Ligue 1", round: "J32", status: "live", minute: 67, time: "20:45", channel: "Canal+ Foot", watch: "myCANAL", access: "subscription", home: "Paris SG", away: "Lyon", hIcon: "PSG", aIcon: "OL", hScore: 2, aScore: 1, stadium: "Parc des Princes", referee: "Clément Turpin", possession: 58, shotsH: 13, shotsA: 8, xgH: 1.8, xgA: .9, attacksH: 42, attacksA: 31, momentum: [3,5,6,4,8,9], events: ["12’ But Paris SG", "38’ Carton jaune Lyon", "51’ But Lyon", "63’ But Paris SG"] },
+      { id: 2, date: "today", country: "England", flag: "🏴", league: "Premier League", round: "M35", status: "upcoming", minute: 0, time: "21:00", channel: "Sky Sports", watch: "Sky Go / NOW", access: "subscription", home: "Manchester City", away: "Arsenal", hIcon: "MCI", aIcon: "ARS", hScore: null, aScore: null, stadium: "Etihad Stadium", referee: "Michael Oliver", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [4,4,4,4,4,4], events: ["Avant-match : compositions 1h avant le coup d’envoi"] },
+      { id: 3, date: "today", country: "Spain", flag: "🇪🇸", league: "LaLiga", round: "J34", status: "finished", minute: 90, time: "18:30", channel: "beIN SPORTS", watch: "beIN Connect", access: "subscription", home: "Real Madrid", away: "Valencia", hIcon: "RMA", aIcon: "VAL", hScore: 3, aScore: 0, stadium: "Santiago Bernabéu", referee: "Mateu Lahoz", possession: 63, shotsH: 18, shotsA: 5, xgH: 2.4, xgA: .4, attacksH: 61, attacksA: 22, momentum: [7,8,6,9,8,7], events: ["24’ But Real Madrid", "44’ But Real Madrid", "72’ But Real Madrid"] },
+      { id: 4, date: "today", country: "Germany", flag: "🇩🇪", league: "Bundesliga", round: "S31", status: "live", minute: 45, time: "19:30", channel: "DAZN", watch: "DAZN App", access: "subscription", home: "Bayern Munich", away: "Dortmund", hIcon: "FCB", aIcon: "BVB", hScore: 1, aScore: 1, stadium: "Allianz Arena", referee: "Daniel Siebert", possession: 54, shotsH: 9, shotsA: 7, xgH: 1.1, xgA: 1.0, attacksH: 35, attacksA: 33, momentum: [4,7,5,8,5,6], events: ["9’ But Dortmund", "27’ But Bayern", "45+2’ Mi-temps"] },
+      { id: 5, date: "today", country: "Italy", flag: "🇮🇹", league: "Serie A", round: "G33", status: "upcoming", minute: 0, time: "20:45", channel: "DAZN", watch: "DAZN App", access: "subscription", home: "Inter", away: "Juventus", hIcon: "INT", aIcon: "JUV", hScore: null, aScore: null, stadium: "San Siro", referee: "Daniele Orsato", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [5,5,5,5,5,5], events: ["Avant-match : duel pour le haut du classement"] },
+      { id: 6, date: "today", country: "Europe", flag: "🇪🇺", league: "Champions League", round: "Semi-final", status: "upcoming", minute: 0, time: "21:00", channel: "Canal+ / RMC Sport", watch: "myCANAL / RMC Sport", access: "subscription", home: "Barcelona", away: "Liverpool", hIcon: "BAR", aIcon: "LIV", hScore: null, aScore: null, stadium: "Estadi Olímpic", referee: "Szymon Marciniak", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [5,5,5,5,5,5], events: ["Avant-match : diffusion selon pays"] },
+      { id: 7, date: "tomorrow", country: "World", flag: "🌍", league: "International Friendly", round: "Friendly", status: "upcoming", minute: 0, time: "19:00", channel: "YouTube", watch: "Chaîne officielle", access: "free", home: "Maroc", away: "Sénégal", hIcon: "MAR", aIcon: "SEN", hScore: null, aScore: null, stadium: "Stade Mohammed V", referee: "À confirmer", possession: 50, shotsH: 0, shotsA: 0, xgH: 0, xgA: 0, attacksH: 0, attacksA: 0, momentum: [5,5,5,5,5,5], events: ["Avant-match : lien officiel à confirmer"] },
+      { id: 8, date: "yesterday", country: "France", flag: "🇫🇷", league: "Ligue 2", round: "J35", status: "finished", minute: 90, time: "17:00", channel: "beIN SPORTS", watch: "beIN Connect", access: "subscription", home: "Saint-Étienne", away: "Bordeaux", hIcon: "ASSE", aIcon: "FCGB", hScore: 1, aScore: 1, stadium: "Geoffroy-Guichard", referee: "Bastien Dechepy", possession: 49, shotsH: 11, shotsA: 10, xgH: 1.2, xgA: 1.1, attacksH: 38, attacksA: 36, momentum: [4,6,5,6,4,5], events: ["31’ But Bordeaux", "76’ But Saint-Étienne"] }
+    ];
+
+    const rankings = {
+      "Ligue 1": [["Paris SG",72,31,48],["Monaco",61,31,25],["Lyon",55,31,18],["Marseille",53,31,13]],
+      "Premier League": [["Arsenal",78,34,54],["Manchester City",77,34,51],["Liverpool",74,34,43],["Chelsea",61,34,19]],
+      "LaLiga": [["Real Madrid",82,34,56],["Barcelona",76,34,42],["Atlético",69,34,31],["Valencia",49,34,2]],
+      "Serie A": [["Inter",81,33,51],["Juventus",68,33,27],["Milan",66,33,25],["Napoli",60,33,17]]
+    };
+
     let state = {
-      lang: localStorage.getItem('footlive_lang') || 'fr',
-      filter: 'all',
-      country: 'all',
-      search: '',
-      selectedId: Number(localStorage.getItem('footlive_selected')) || 1,
-      favorites: JSON.parse(localStorage.getItem('footlive_favorites') || '[1,2,5]'),
-      dark: localStorage.getItem('footlive_theme') !== 'light'
+      lang: localStorage.getItem("fn_lang") || "fr",
+      theme: localStorage.getItem("fn_theme") || "dark",
+      page: "matches",
+      filter: "all",
+      date: "today",
+      league: "all",
+      search: "",
+      selected: Number(localStorage.getItem("fn_selected") || 1),
+      favorites: JSON.parse(localStorage.getItem("fn_favorites") || "[1,2,5]"),
+      notifications: localStorage.getItem("fn_notifications") === "on"
     };
 
     const $ = selector => document.querySelector(selector);
-    const $$ = selector => [...document.querySelectorAll(selector)];
+    const $$ = selector => Array.from(document.querySelectorAll(selector));
+    const tr = key => I18N[state.lang][key] || I18N.fr[key] || key;
 
-    function t(key) { return translations[state.lang][key] || translations.fr[key] || key; }
-
-    function updateLanguage() {
-      document.documentElement.lang = state.lang;
-      document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
-      $('#languageSelect').value = state.lang;
-      $$('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
-      $$('[data-i18n-placeholder]').forEach(el => el.placeholder = t(el.dataset.i18nPlaceholder));
+    function init() {
+      document.documentElement.dataset.theme = state.theme;
+      $("#languageSelect").value = state.lang;
       renderAll();
+      bindEvents();
+      updateClock();
+      setInterval(updateClock, 1000);
+      setInterval(simulateLive, 8500);
     }
 
-    function updateClock() {
-      const now = new Date();
-      $('#clockTime').textContent = now.toLocaleTimeString(state.lang, { hour: '2-digit', minute: '2-digit' });
-      $('#clockDate').textContent = now.toLocaleDateString(state.lang, { weekday: 'short', day: '2-digit', month: 'short' });
+    function bindEvents() {
+      $("#languageSelect").addEventListener("change", event => {
+        state.lang = event.target.value;
+        localStorage.setItem("fn_lang", state.lang);
+        renderAll();
+      });
+      $("#themeBtn").addEventListener("click", () => {
+        state.theme = state.theme === "dark" ? "light" : "dark";
+        localStorage.setItem("fn_theme", state.theme);
+        document.documentElement.dataset.theme = state.theme;
+      });
+      $("#notifyBtn").addEventListener("click", () => {
+        state.notifications = !state.notifications;
+        localStorage.setItem("fn_notifications", state.notifications ? "on" : "off");
+        toast(tr("notifOn"));
+      });
+      $("#searchInput").addEventListener("input", event => {
+        state.search = event.target.value;
+        renderMatches();
+      });
+      $("#dateBox").addEventListener("click", event => {
+        const button = event.target.closest("button");
+        if (!button) return;
+        state.date = button.dataset.date;
+        renderAll();
+      });
     }
 
-    function getStatusLabel(match) {
-      if (match.status === 'live') return match.minute === 'HT' ? t('ht') : match.minute;
-      if (match.status === 'finished') return t('ft');
-      return t('preview');
+    function renderAll() {
+      renderText();
+      renderNav();
+      renderFilters();
+      renderLeagues();
+      renderStats();
+      renderTicker();
+      renderMatches();
+      renderDetails();
+      renderTv();
+      renderRankings();
+      renderTeams();
+      renderNews();
+      renderHotTeams();
+      $$("#dateBox button").forEach(button => button.classList.toggle("active", button.dataset.date === state.date));
+    }
+
+    function renderText() {
+      document.documentElement.lang = state.lang;
+      document.documentElement.dir = state.lang === "ar" ? "rtl" : "ltr";
+      $$("[data-i18n]").forEach(element => element.textContent = tr(element.dataset.i18n));
+      $$("[data-i18n-placeholder]").forEach(element => element.placeholder = tr(element.dataset.i18nPlaceholder));
+    }
+
+    function renderNav() {
+      const html = NAV.map(item => `<button class="nav-btn ${state.page === item.id ? "active" : ""}" onclick="setPage('${item.id}')"><span>${item.icon} ${tr(item.key)}</span><span class="badge">›</span></button>`).join("");
+      $("#desktopNav").innerHTML = html;
+      $("#mobileNav").innerHTML = NAV.slice(0,5).map(item => `<button class="${state.page === item.id ? "active" : ""}" onclick="setPage('${item.id}')"><div>${item.icon}</div><div>${tr(item.key)}</div></button>`).join("");
+    }
+
+    function renderFilters() {
+      $("#filterBar").innerHTML = FILTERS.map(item => `<button class="filter-btn ${state.filter === item.id ? "active" : ""}" onclick="setFilter('${item.id}')">${tr(item.key)}</button>`).join("");
+    }
+
+    function setPage(page) {
+      state.page = page;
+      $$(".section").forEach(section => section.classList.remove("active"));
+      const section = $("#section-" + page);
+      if (section) section.classList.add("active");
+      renderNav();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function setFilter(filter) {
       state.filter = filter;
-      $$('.chip').forEach(chip => chip.classList.toggle('active', chip.dataset.filter === filter));
-      $$('.nav-btn, .mobile-tabs button').forEach(btn => btn.classList.toggle('active', btn.dataset.view === filter || (filter === 'all' && btn.dataset.view === 'all')));
-      renderMatches();
+      if (filter === "live") state.date = "today";
+      setPage("matches");
+      renderAll();
     }
 
-    function setCountry(country) {
-      state.country = country;
-      renderCountries();
+    function setLeague(league) {
+      state.league = league;
+      renderAll();
+    }
+
+    function updateClock() {
+      $("#clock").textContent = new Date().toLocaleTimeString(state.lang, { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function renderLeagues() {
+      const leagues = Array.from(new Set(matches.map(match => match.league)));
+      $("#leagueTotal").textContent = leagues.length;
+      const all = `<button class="league-btn ${state.league === "all" ? "active" : ""}" onclick="setLeague('all')"><span>🌐 ${tr("all")}</span><span class="badge">${matches.length}</span></button>`;
+      const list = leagues.map(league => {
+        const first = matches.find(match => match.league === league);
+        const count = matches.filter(match => match.league === league).length;
+        return `<button class="league-btn ${state.league === league ? "active" : ""}" onclick="setLeague('${league}')"><span>${first.flag} ${league}</span><span class="badge">${count}</span></button>`;
+      }).join("");
+      $("#leagueList").innerHTML = all + list;
+    }
+
+    function renderStats() {
+      $("#statLive").textContent = matches.filter(match => match.status === "live").length;
+      $("#statToday").textContent = matches.filter(match => match.date === "today").length;
+      $("#statTv").textContent = matches.filter(match => match.channel).length;
+      $("#statFav").textContent = state.favorites.length;
+    }
+
+    function labelStatus(match) {
+      if (match.status === "live") return match.minute === 45 ? "HT" : match.minute + "’";
+      if (match.status === "finished") return "FT";
+      return tr("upcoming");
+    }
+
+    function score(match) {
+      return match.status === "upcoming" ? "–" : match.hScore + " - " + match.aScore;
+    }
+
+    function renderTicker() {
+      const items = matches.filter(match => match.status === "live").concat(matches.filter(match => match.status !== "live")).slice(0, 8);
+      const html = items.map(match => `<div class="ticker-item"><span>${match.flag}</span><span>${match.home}</span><b>${score(match)}</b><span>${match.away}</span><span class="badge">${labelStatus(match)}</span></div>`).join("");
+      $("#tickerTrack").innerHTML = html + html;
+    }
+
+    function getMatches() {
+      const query = state.search.trim().toLowerCase();
+      return matches.filter(match => {
+        const fav = state.favorites.includes(match.id);
+        const text = (match.country + " " + match.league + " " + match.home + " " + match.away + " " + match.channel + " " + match.watch).toLowerCase();
+        const filterOk = state.filter === "all" || state.filter === match.status || (state.filter === "tv" && match.channel) || (state.filter === "favorites" && fav);
+        const dateOk = state.filter === "live" || match.date === state.date;
+        const leagueOk = state.league === "all" || match.league === state.league;
+        const searchOk = query === "" || text.includes(query);
+        return filterOk && dateOk && leagueOk && searchOk;
+      });
+    }
+
+    function groupMatches(items) {
+      const groups = {};
+      items.forEach(match => {
+        const key = match.flag + " " + match.country + " · " + match.league;
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(match);
+      });
+      return groups;
+    }
+
+    function renderMomentum(match) {
+      return `<div class="momentum">${match.momentum.map(value => `<span class="dotbar ${value >= 8 ? "hot" : value >= 6 ? "good" : value <= 3 ? "bad" : ""}" style="height:${10 + value * 2}px"></span>`).join("")}</div>`;
+    }
+
+    function renderMatches() {
+      const items = getMatches();
+      if (!items.length) {
+        $("#matchesContainer").innerHTML = `<div class="empty">${tr("noResults")}</div>`;
+        return;
+      }
+      const groups = groupMatches(items);
+      $("#matchesContainer").innerHTML = Object.entries(groups).map(entry => {
+        const leagueName = entry[0];
+        const games = entry[1];
+        return `<article class="match-block"><div class="league-head"><div class="league-title"><span>${games[0].flag}</span><div><b>${leagueName}</b><small>${games[0].round}</small></div></div><span class="badge">${games.length}</span></div>${games.map(match => renderMatchRow(match)).join("")}</article>`;
+      }).join("");
+    }
+
+    function renderMatchRow(match) {
+      return `<div class="match-row ${state.selected === match.id ? "selected" : ""}" onclick="selectMatch(${match.id})"><div class="status ${match.status}"><span>${labelStatus(match)}</span><span>${match.time}</span></div><div class="teams"><div class="team-line"><div class="team-name"><span class="crest">${match.hIcon}</span><span>${match.home}</span></div><span class="score">${match.hScore === null ? "" : match.hScore}</span></div><div class="team-line"><div class="team-name"><span class="crest">${match.aIcon}</span><span>${match.away}</span></div><span class="score">${match.aScore === null ? "" : match.aScore}</span></div></div>${renderMomentum(match)}<div class="watch"><b>${match.channel}</b><span>${match.watch}</span></div><button class="icon-btn star ${state.favorites.includes(match.id) ? "active" : ""}" onclick="toggleFavorite(${match.id}, event)">★</button></div>`;
+    }
+
+    function selectMatch(id) {
+      state.selected = id;
+      localStorage.setItem("fn_selected", String(id));
       renderMatches();
+      renderDetails();
     }
 
     function toggleFavorite(id, event) {
       event.stopPropagation();
-      if (state.favorites.includes(id)) {
-        state.favorites = state.favorites.filter(item => item !== id);
-      } else {
-        state.favorites.push(id);
-      }
-      localStorage.setItem('footlive_favorites', JSON.stringify(state.favorites));
+      if (state.favorites.includes(id)) state.favorites = state.favorites.filter(item => item !== id);
+      else state.favorites.push(id);
+      localStorage.setItem("fn_favorites", JSON.stringify(state.favorites));
       renderAll();
     }
 
-    function selectMatch(id) {
-      state.selectedId = id;
-      localStorage.setItem('footlive_selected', String(id));
-      renderMatches();
-      renderDetails();
-    }
-
-    function filteredMatches() {
-      const q = state.search.trim().toLowerCase();
-      return matches.filter(match => {
-        const favorite = state.favorites.includes(match.id);
-        const hasTv = Boolean(match.tv);
-        const countryOk = state.country === 'all' || match.country === state.country;
-        const filterOk =
-          state.filter === 'all' ||
-          (state.filter === 'live' && match.status === 'live') ||
-          (state.filter === 'upcoming' && match.status === 'upcoming') ||
-          (state.filter === 'finished' && match.status === 'finished') ||
-          (state.filter === 'tv' && hasTv) ||
-          (state.filter === 'favorites' && favorite);
-        const searchText = `${match.home} ${match.away} ${match.league} ${match.country} ${match.tv} ${match.watch}`.toLowerCase();
-        return countryOk && filterOk && (!q || searchText.includes(q));
-      });
-    }
-
-    function groupByLeague(items) {
-      return items.reduce((acc, match) => {
-        const key = `${match.flag} ${match.country} · ${match.league}`;
-        if (!acc[key]) acc[key] = [];
-        acc[key].push(match);
-        return acc;
-      }, {});
-    }
-
-    function renderStats() {
-      $('#liveCount').textContent = matches.filter(m => m.status === 'live').length;
-      $('#todayCount').textContent = matches.length;
-      $('#tvCount').textContent = matches.filter(m => m.tv).length;
-    }
-
-    function renderTopTeams() {
-      const favMatches = matches.filter(m => state.favorites.includes(m.id)).slice(0, 4);
-      $('#topTeams').innerHTML = favMatches.map(match => `
-        <div class="team-item">
-          <div class="team-name"><span class="crest">${match.hIcon}</span><span>${match.home}</span></div>
-          <span class="badge">${match.time}</span>
-        </div>
-      `).join('') || `<div class="empty-state">${t('noMatch')}</div>`;
-    }
-
-    function renderCountries() {
-      const counts = matches.reduce((acc, m) => {
-        acc[m.country] = (acc[m.country] || 0) + 1;
-        return acc;
-      }, {});
-      const countries = [['all', '🌐', t('filterAll'), matches.length], ...Object.entries(counts).map(([country, count]) => {
-        const flag = matches.find(m => m.country === country).flag;
-        return [country, flag, country, count];
-      })];
-      $('#competitionCount').textContent = countries.length - 1;
-      $('#countryList').innerHTML = countries.map(([value, flag, label, count]) => `
-        <button class="country-btn ${state.country === value ? 'active' : ''}" onclick="setCountry('${value}')">
-          <span class="country-name"><span>${flag}</span><span>${label}</span></span>
-          <span class="badge">${count}</span>
-        </button>
-      `).join('');
-    }
-
-    function formHtml(form) {
-      return `<div class="form">${form.map(item => `<span class="form-dot ${item}">${item.toUpperCase()}</span>`).join('')}</div>`;
-    }
-
-    function scoreText(match) {
-      return match.status === 'upcoming' ? '- -' : `${match.hScore} - ${match.aScore}`;
-    }
-
-    function renderMatches() {
-      const items = filteredMatches();
-      $('#matchCountLabel').textContent = `${items.length} ${items.length > 1 ? t('matches') : t('match')}`;
-      const grouped = groupByLeague(items);
-
-      if (!items.length) {
-        $('#matchesContainer').innerHTML = `<div class="empty-state">${t('noMatch')}</div>`;
-        return;
-      }
-
-      $('#matchesContainer').innerHTML = Object.entries(grouped).map(([league, leagueMatches]) => `
-        <article class="league-card">
-          <div class="league-header">
-            <div class="league-title">
-              <span>${league.split(' ')[0]}</span>
-              <div><strong>${league.replace(/^\S+\s/, '')}</strong><span>${leagueMatches[0].round}</span></div>
-            </div>
-            <span class="badge">${leagueMatches.length}</span>
-          </div>
-          ${leagueMatches.map(match => `
-            <div class="match-row ${state.selectedId === match.id ? 'selected' : ''}" onclick="selectMatch(${match.id})">
-              <div class="match-status ${match.status === 'live' ? 'status-live' : match.status === 'finished' ? 'status-finished' : 'status-upcoming'}">
-                <span>${getStatusLabel(match)}</span>
-                <span>${match.time}</span>
-              </div>
-              <div class="teams">
-                <div class="team-line">
-                  <div class="team-left"><span class="crest">${match.hIcon}</span><span>${match.home}</span></div>
-                  <span class="score">${match.hScore ?? ''}</span>
-                </div>
-                <div class="team-line">
-                  <div class="team-left"><span class="crest">${match.aIcon}</span><span>${match.away}</span></div>
-                  <span class="score">${match.aScore ?? ''}</span>
-                </div>
-              </div>
-              ${formHtml(match.formH)}
-              <div class="watch"><strong>${match.tv}</strong><span>${match.watch}</span></div>
-              <button class="icon-btn ${state.favorites.includes(match.id) ? 'active' : ''}" onclick="toggleFavorite(${match.id}, event)" aria-label="Favori">★</button>
-            </div>
-          `).join('')}
-        </article>
-      `).join('');
-    }
-
     function renderDetails() {
-      const match = matches.find(m => m.id === state.selectedId) || filteredMatches()[0] || matches[0];
-      if (!match) return;
-      const possessionAway = match.status === 'upcoming' ? 0 : 100 - match.stats.possession;
-      $('#detailsCard').innerHTML = `
-        <div class="details-hero">
-          <div class="details-league">${match.flag} ${match.country} · ${match.league} · ${match.round}</div>
-          <div class="details-scoreboard">
-            <div class="details-team"><span class="crest">${match.hIcon}</span><span>${match.home}</span></div>
-            <div class="big-score">${scoreText(match)}</div>
-            <div class="details-team"><span class="crest">${match.aIcon}</span><span>${match.away}</span></div>
-          </div>
-        </div>
-        <div class="details-body">
-          <div class="section-title"><h3>${t('details')}</h3><small>${getStatusLabel(match)}</small></div>
-          <div class="info-grid">
-            <div class="info-box"><span>${t('time')}</span><strong>${match.time}</strong></div>
-            <div class="info-box"><span>${t('channel')}</span><strong>${match.tv}</strong></div>
-            <div class="info-box"><span>${t('where')}</span><strong>${match.watch}</strong></div>
-            <div class="info-box"><span>${t(match.access)}</span><strong>${match.access === 'free' ? t('free') : t('subscription')}</strong></div>
-            <div class="info-box"><span>${t('stadium')}</span><strong>${match.stadium}</strong></div>
-            <div class="info-box"><span>${t('referee')}</span><strong>${match.referee}</strong></div>
-          </div>
+      const match = matches.find(item => item.id === state.selected) || matches[0];
+      const awayPoss = 100 - match.possession;
+      $("#detailCard").innerHTML = `<div class="detail-hero"><div class="detail-league">${match.flag} ${match.country} · ${match.league} · ${match.round}</div><div class="scoreboard"><div class="detail-team"><span class="crest">${match.hIcon}</span><span>${match.home}</span></div><div class="big-score">${score(match)}</div><div class="detail-team"><span class="crest">${match.aIcon}</span><span>${match.away}</span></div></div></div><div class="detail-body"><div class="panel-head"><h3>${tr("details")}</h3><span class="badge">${labelStatus(match)}</span></div><div class="info-grid"><div class="info-box"><span>${tr("time")}</span><b>${match.time}</b></div><div class="info-box"><span>${tr("channel")}</span><b>${match.channel}</b></div><div class="info-box"><span>${tr("where")}</span><b>${match.watch}</b></div><div class="info-box"><span>${tr("tv")}</span><b>${tr(match.access)}</b></div><div class="info-box"><span>${tr("stadium")}</span><b>${match.stadium}</b></div><div class="info-box"><span>${tr("referee")}</span><b>${match.referee}</b></div></div><div class="panel-head"><h3>${tr("stats")}</h3><small>Live data</small></div><div class="progress-row"><div class="progress-top"><span>${match.home} ${match.possession}%</span><span>${awayPoss}% ${match.away}</span></div><div class="progress"><span style="width:${match.possession}%"></span></div></div><div class="info-grid"><div class="info-box"><span>${tr("shots")}</span><b>${match.shotsH} - ${match.shotsA}</b></div><div class="info-box"><span>${tr("xg")}</span><b>${match.xgH.toFixed(1)} - ${match.xgA.toFixed(1)}</b></div><div class="info-box"><span>${tr("attacks")}</span><b>${match.attacksH} - ${match.attacksA}</b></div><div class="info-box"><span>${tr("possession")}</span><b>${match.possession}% - ${awayPoss}%</b></div></div><div class="panel-head"><h3>${tr("lineup")}</h3><small>4-3-3</small></div><div class="pitch">${pitch()}</div><div class="panel-head"><h3>${tr("timeline")}</h3><small>${match.events.length}</small></div><div class="timeline">${match.events.map(event => renderEvent(event)).join("")}</div></div>`;
+    }
 
-          <div class="section-title"><h3>${t('stats')}</h3><small>${match.status === 'upcoming' ? t('preview') : 'Live'}</small></div>
-          <div class="bar-row">
-            <div class="bar-top"><span>${match.home} ${match.stats.possession}%</span><span>${possessionAway}% ${match.away}</span></div>
-            <div class="bar"><span style="width:${match.stats.possession}%"></span></div>
-          </div>
-          <div class="info-grid">
-            <div class="info-box"><span>${t('shots')}</span><strong>${match.stats.shotsH} - ${match.stats.shotsA}</strong></div>
-            <div class="info-box"><span>${t('xg')}</span><strong>${match.stats.xgH} - ${match.stats.xgA}</strong></div>
-          </div>
+    function pitch() {
+      const home = [[10,50,"GK"],[25,20,"2"],[25,42,"4"],[25,58,"5"],[25,80,"3"],[44,30,"6"],[44,50,"8"],[44,70,"10"],[63,24,"7"],[66,50,"9"],[63,76,"11"]];
+      const away = [[90,50,"GK"],[75,20,"2"],[75,42,"4"],[75,58,"5"],[75,80,"3"],[56,30,"6"],[56,50,"8"],[56,70,"10"],[37,24,"7"],[34,50,"9"],[37,76,"11"]];
+      const h = home.map(player => `<span class="player" style="left:${player[0]}%;top:${player[1]}%">${player[2]}</span>`).join("");
+      const a = away.map(player => `<span class="player away" style="left:${player[0]}%;top:${player[1]}%">${player[2]}</span>`).join("");
+      return h + a;
+    }
 
-          <div class="section-title"><h3>${t('events')}</h3><small>${match.events.length}</small></div>
-          <div class="timeline">
-            ${match.events.map(event => {
-              const parts = event.split(' ');
-              return `<div class="event-line"><span class="event-time">${parts[0]}</span><span>${parts.slice(1).join(' ')}</span></div>`;
-            }).join('')}
-          </div>
-        </div>
-      `;
+    function renderEvent(eventText) {
+      const index = eventText.indexOf(" ");
+      const time = index > -1 ? eventText.slice(0, index) : "•";
+      const text = index > -1 ? eventText.slice(index + 1) : eventText;
+      return `<div class="event"><span class="event-time">${time}</span><span>${text}</span></div>`;
+    }
+
+    function renderTv() {
+      const items = matches.filter(match => match.channel).sort((a, b) => a.time.localeCompare(b.time));
+      $("#tvList").innerHTML = items.map(match => `<div class="tv-card" onclick="selectMatch(${match.id}); setPage('matches')"><div class="channel-logo">${match.channel.split(" ")[0]}</div><div><b>${match.home} - ${match.away}</b><span>${match.time} · ${match.channel} · ${match.watch}</span></div><span class="badge">${tr(match.access)}</span></div>`).join("");
+    }
+
+    function renderRankings() {
+      $("#rankingGrid").innerHTML = Object.entries(rankings).map(entry => `<div class="panel"><div class="panel-head"><h3>${entry[0]}</h3><small>Top 4</small></div><div class="stack"><div class="ranking-row header"><span>#</span><span>Club</span><span>Pts</span><span>J</span><span>Diff</span></div>${entry[1].map((row, index) => `<div class="ranking-row"><span>${index + 1}</span><span>${row[0]}</span><span>${row[1]}</span><span>${row[2]}</span><span>${row[3]}</span></div>`).join("")}</div></div>`).join("");
+    }
+
+    function renderTeams() {
+      const teams = [];
+      matches.forEach(match => {
+        teams.push({ name: match.home, icon: match.hIcon, league: match.league, id: match.id });
+        teams.push({ name: match.away, icon: match.aIcon, league: match.league, id: match.id });
+      });
+      $("#teamsGrid").innerHTML = teams.slice(0, 16).map(team => `<div class="team-card" onclick="selectMatch(${team.id}); setPage('matches')"><div class="team-left"><span class="crest">${team.icon}</span><div><b>${team.name}</b><span>${team.league}</span></div></div><span class="badge">›</span></div>`).join("");
     }
 
     function renderNews() {
-      const news = [
-        { tag: 'Mercato', text: 'Plusieurs clubs européens préparent déjà leur mercato estival.' },
-        { tag: 'TV', text: 'Vérifie toujours le diffuseur officiel selon ton pays avant le coup d’envoi.' },
-        { tag: 'Stats', text: 'Les xG et compositions peuvent être branchés via une API football.' }
-      ];
-      $('#newsList').innerHTML = news.map(item => `
-        <div class="news-item"><span class="news-dot"></span><div><p>${item.text}</p><small>${item.tag}</small></div></div>
-      `).join('');
+      const news = [["Mercato", "Plusieurs clubs européens préparent déjà leurs offres pour l’été."], ["Blessures", "Les compositions probables changent automatiquement dans le centre de match."], ["TV", "Les chaînes peuvent varier selon ton pays : branche une API TV officielle."], ["Stats", "xG, tirs, possession et attaques peuvent être synchronisés en temps réel."], ["Alerte", "Active les notifications pour recevoir les buts de tes favoris."]];
+      $("#newsList").innerHTML = news.map(item => `<div class="news-card"><b>${item[0]}</b><span>${item[1]}</span></div>`).join("");
     }
 
-    function renderTheme() {
-      if (state.dark) {
-        document.documentElement.style.setProperty('--bg', '#070b12');
-        document.documentElement.style.setProperty('--text', '#f8fafc');
-        document.documentElement.style.setProperty('--muted', '#94a3b8');
-      } else {
-        document.documentElement.style.setProperty('--bg', '#eef5ef');
-        document.documentElement.style.setProperty('--text', '#07130b');
-        document.documentElement.style.setProperty('--muted', '#475569');
+    function renderHotTeams() {
+      const teams = [["PSG", "Paris SG", "5 victoires"], ["MCI", "Manchester City", "Série positive"], ["RMA", "Real Madrid", "Meilleure attaque"], ["INT", "Inter", "Défense solide"]];
+      $("#hotTeams").innerHTML = teams.map(team => `<div class="team-card"><div class="team-left"><span class="crest">${team[0]}</span><div><b>${team[1]}</b><span>${team[2]}</span></div></div><span class="badge">🔥</span></div>`).join("");
+    }
+
+    function simulateLive() {
+      const live = matches.filter(match => match.status === "live");
+      if (!live.length) return;
+      const match = live[Math.floor(Math.random() * live.length)];
+      match.minute = Math.min(90, match.minute + 1);
+      match.shotsH += Math.random() > .58 ? 1 : 0;
+      match.shotsA += Math.random() > .68 ? 1 : 0;
+      match.attacksH += Math.floor(Math.random() * 3);
+      match.attacksA += Math.floor(Math.random() * 3);
+      match.possession = Math.max(42, Math.min(64, match.possession + (Math.random() > .5 ? 1 : -1)));
+      match.momentum.push(Math.floor(Math.random() * 10));
+      match.momentum = match.momentum.slice(-6);
+      if (Math.random() > .86) {
+        const homeGoal = Math.random() > .48;
+        if (homeGoal) match.hScore += 1;
+        else match.aScore += 1;
+        match.events.push(match.minute + "’ But " + (homeGoal ? match.home : match.away));
+        if (state.notifications) toast("⚽ " + (homeGoal ? match.home : match.away) + " marque ! " + match.home + " " + match.hScore + "-" + match.aScore + " " + match.away);
+      } else if (state.notifications && Math.random() > .80) {
+        toast(tr("alert"));
       }
+      renderAll();
     }
 
-    function renderAll() {
-      renderTheme();
-      renderStats();
-      renderTopTeams();
-      renderCountries();
-      renderMatches();
-      renderDetails();
-      renderNews();
+    function toast(message) {
+      const box = $("#toast");
+      box.textContent = message;
+      box.classList.add("show");
+      setTimeout(() => box.classList.remove("show"), 3600);
     }
 
-    $('#languageSelect').addEventListener('change', e => {
-      state.lang = e.target.value;
-      localStorage.setItem('footlive_lang', state.lang);
-      updateLanguage();
-    });
-
-    $('#searchInput').addEventListener('input', e => {
-      state.search = e.target.value;
-      renderMatches();
-    });
-
-    $('#filterChips').addEventListener('click', e => {
-      const chip = e.target.closest('.chip');
-      if (!chip) return;
-      setFilter(chip.dataset.filter);
-    });
-
-    $$('.nav-btn, .mobile-tabs button').forEach(btn => {
-      btn.addEventListener('click', () => setFilter(btn.dataset.view));
-    });
-
-    $('#themeToggle').addEventListener('click', () => {
-      state.dark = !state.dark;
-      localStorage.setItem('footlive_theme', state.dark ? 'dark' : 'light');
-      renderTheme();
-    });
-
-    setInterval(updateClock, 1000);
-    updateClock();
-    updateLanguage();
+    init();
   </script>
 </body>
 </html>
