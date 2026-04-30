@@ -1,17 +1,41 @@
 body {
+  margin:0;
   font-family: Arial;
-  background:#0f172a;
+  background:#0b1220;
   color:white;
-  padding:20px;
 }
 
 h1 {
   text-align:center;
+  padding:20px;
+  font-size:40px;
+}
+
+.top {
+  text-align:center;
+  margin-bottom:20px;
+}
+
+select {
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  background:#1e293b;
+  color:white;
 }
 
 .card {
-  background:rgba(255,255,255,0.1);
+  background:#111827;
+  margin:10px auto;
   padding:15px;
-  margin:10px 0;
+  width:90%;
+  max-width:700px;
   border-radius:12px;
+  border-left:4px solid #3b82f6;
+}
+
+.score {
+  font-size:20px;
+  font-weight:bold;
+  color:#22c55e;
 }
