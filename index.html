@@ -2,71 +2,113 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Sport Live Pro Max</title>
+<title>Sport Live Pro</title>
 
 <style>
 body{
   margin:0;
   font-family: Arial;
-  background:#0a0f1c;
+  background:#050816;
   color:white;
 }
 
-/* TOP BAR MOBILE */
-.topbar{
-  background:#111827;
+/* ANIMATION INTRO */
+.intro{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:scale(1.1);}
+  to{opacity:1; transform:scale(1);}
+}
+
+.title{
+  font-size:32px;
+  font-weight:bold;
+  background:linear-gradient(90deg,#00c6ff,#0072ff,#ff00cc);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow{
+  from{filter:drop-shadow(0 0 5px #00c6ff);}
+  to{filter:drop-shadow(0 0 20px #ff00cc);}
+}
+
+.subtitle{
+  margin-top:10px;
+  color:#aaa;
+}
+
+/* LIGUES */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:20px;
+  width:80%;
+}
+
+.btn{
   padding:15px;
+  border:none;
+  border-radius:15px;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.btn:hover{
+  transform:scale(1.05);
+}
+
+.l1{background:#2563eb;}
+.pl{background:#10b981;}
+.ll{background:#f97316;}
+.bu{background:#ef4444;}
+.champ{background:#a855f7;}
+.saudi{background:#facc15; color:black;}
+.portugal{background:#06b6d4;}
+.holland{background:#22c55e;}
+
+/* APP */
+.app{
+  display:none;
+  padding:10px;
+}
+
+.topbar{
   text-align:center;
   font-size:20px;
-  font-weight:bold;
+  padding:10px;
   color:#38bdf8;
 }
 
 /* LANG */
 .langs{
   display:flex;
-  flex-wrap:wrap;
   justify-content:center;
   gap:5px;
-  padding:10px;
+  margin:10px;
 }
 
 .langs button{
-  background:#1f2937;
+  background:#111827;
   border:none;
-  padding:6px 10px;
-  border-radius:15px;
+  padding:5px 8px;
   color:white;
-}
-
-/* NAV */
-.nav{
-  display:flex;
-  justify-content:space-around;
-  padding:10px;
-  background:#0f172a;
-  position:sticky;
-  top:0;
-}
-
-.nav button{
-  background:none;
-  border:none;
-  color:white;
-  font-weight:bold;
-}
-
-/* INPUT */
-input{
-  width:90%;
-  margin:10px auto;
-  display:block;
-  padding:10px;
   border-radius:10px;
-  border:none;
 }
 
-/* CARD */
+/* MATCH */
 .card{
   background:#111827;
   margin:10px;
@@ -75,130 +117,98 @@ input{
   border-left:4px solid #38bdf8;
 }
 
-.score{
-  color:#22c55e;
-  font-weight:bold;
-}
-
 .star{
   float:right;
-  cursor:pointer;
   color:#facc15;
-}
-
-/* FAVORIS */
-.fav{
-  border-left:4px solid #facc15;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="topbar">⚽ SPORT LIVE PRO MAX</div>
+<!-- INTRO -->
+<div id="intro" class="intro">
 
-<!-- LANG -->
+  <div class="title">⚽ SPORT LIVE PRO</div>
+  <div class="subtitle">CHOISISSEZ VOTRE LIGUE</div>
+
+  <div class="grid">
+    <button class="btn l1" onclick="start('Ligue 1')">LIGUE 1</button>
+    <button class="btn pl" onclick="start('Premier League')">PREMIER LEAGUE</button>
+    <button class="btn ll" onclick="start('La Liga')">LA LIGA</button>
+    <button class="btn bu" onclick="start('Bundesliga')">BUNDESLIGA</button>
+    <button class="btn champ" onclick="start('Champions League')">CHAMPIONS</button>
+    <button class="btn saudi" onclick="start('Saudi')">SAOUDI</button>
+    <button class="btn portugal" onclick="start('Portugal')">PORTUGAL</button>
+    <button class="btn holland" onclick="start('Netherlands')">PAYS-BAS</button>
+  </div>
+
+</div>
+
+<!-- APP -->
+<div id="app" class="app">
+
+<div class="topbar">⚽ SPORT LIVE</div>
+
 <div class="langs">
-<button onclick="setLang('fr')">🇫🇷</button>
-<button onclick="setLang('en')">🇺🇸</button>
-<button onclick="setLang('es')">🇪🇸</button>
-<button onclick="setLang('pt')">🇵🇹</button>
-<button onclick="setLang('de')">🇩🇪</button>
-<button onclick="setLang('ar')">🇸🇦</button>
+<button>🇫🇷</button>
+<button>🇺🇸</button>
+<button>🇪🇸</button>
+<button>🇵🇹</button>
+<button>🇩🇪</button>
+<button>🇸🇦</button>
 </div>
-
-<!-- NAV -->
-<div class="nav">
-<button onclick="setLeague('all')">ALL</button>
-<button onclick="setLeague('Ligue 1')">L1</button>
-<button onclick="setLeague('Premier League')">PL</button>
-<button onclick="setLeague('La Liga')">LL</button>
-<button onclick="showFav()">⭐</button>
-</div>
-
-<input id="search" placeholder="Rechercher équipe..." oninput="render()">
 
 <div id="matches"></div>
 
+</div>
+
 <script>
-const API_KEY="TA_CLE_ICI";
 
-let data=[];
-let league="all";
-let favs=JSON.parse(localStorage.getItem("favs")||"[]");
+let selectedLeague="";
 
-async function load(){
-  const url="https://v3.football.api-sports.io/fixtures?date="+
-  new Date().toISOString().split("T")[0];
+const matches=[
+  {league:"Premier League",home:"Arsenal",away:"Chelsea",time:"21:00"},
+  {league:"Premier League",home:"Man City",away:"Liverpool",time:"18:30"},
+  {league:"Ligue 1",home:"PSG",away:"Marseille",time:"20:45"},
+  {league:"La Liga",home:"Real Madrid",away:"Barcelona",time:"21:00"},
+  {league:"Bundesliga",home:"Bayern",away:"Dortmund",time:"18:30"},
+  {league:"Champions League",home:"PSG",away:"Real Madrid",time:"21:00"},
+  {league:"Saudi",home:"Al Hilal",away:"Al Nassr",time:"20:00"},
+  {league:"Portugal",home:"Benfica",away:"Porto",time:"22:00"},
+  {league:"Netherlands",home:"Ajax",away:"PSV",time:"16:45"}
+];
 
-  const res=await fetch(url,{
-    headers:{ "x-apisports-key":API_KEY }
-  });
+function start(league){
+  selectedLeague=league;
 
-  const json=await res.json();
-  data=json.response;
+  document.getElementById("intro").style.display="none";
+  document.getElementById("app").style.display="block";
+
   render();
 }
 
-function setLeague(l){league=l;render();}
-
-function setLang(l){
-  alert("Langue : "+l);
-}
-
-function toggleFav(id){
-  if(favs.includes(id)){
-    favs=favs.filter(f=>f!==id);
-  }else{
-    favs.push(id);
-  }
-  localStorage.setItem("favs",JSON.stringify(favs));
-  render();
-}
-
-function showFav(){
-  render(true);
-}
-
-function render(favOnly=false){
+function render(){
   const box=document.getElementById("matches");
-  const s=document.getElementById("search").value.toLowerCase();
-
   box.innerHTML="";
 
-  data.forEach(m=>{
+  matches.forEach(m=>{
 
-    let id=m.fixture.id;
-    let lg=m.league.name;
-    let home=m.teams.home.name;
-    let away=m.teams.away.name;
-
-    if(league!="all" && !lg.includes(league))return;
-    if(s && !home.toLowerCase().includes(s) && !away.toLowerCase().includes(s))return;
-    if(favOnly && !favs.includes(id))return;
-
-    let status=m.fixture.status.short;
-    let score=m.goals.home+" - "+m.goals.away;
+    if(!m.league.includes(selectedLeague))return;
 
     box.innerHTML+=`
-      <div class="card ${favs.includes(id)?"fav":""}">
-        🏆 ${lg}
-        <span class="star" onclick="toggleFav(${id})">⭐</span><br>
+      <div class="card">
+        🏆 ${m.league}
+        <span class="star">⭐</span><br><br>
 
-        ⚽ ${home} vs ${away}<br>
-
-        ⏰ ${m.fixture.date.slice(11,16)}<br>
-
-        <div class="score">
-          ${status=="FT"?"FIN":"🔴 LIVE "+score}
-        </div>
+        ⚽ ${m.home} vs ${m.away}<br>
+        ⏰ ${m.time}
       </div>
     `;
   });
 }
 
-load();
-setInterval(load,60000);
 </script>
 
 </body>
